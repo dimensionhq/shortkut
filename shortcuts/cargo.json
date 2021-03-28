@@ -1,0 +1,8 @@
+{
+    "shortcuts": [
+        {
+            "alias": "cru",
+            "command": "cargo run"
+        }
+    ]
+}

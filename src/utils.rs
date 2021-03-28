@@ -1,3 +1,5 @@
 use reqwest::blocking;
 
-pub fn get() {}
+pub fn get_shortcuts() {
+    blocking::get("https://google.com");
+}
