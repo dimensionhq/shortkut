@@ -1,9 +1,20 @@
 {
-    "display-name": "Cargo Shortcuts",
     "shortcuts": [
         {
             "alias": "cru",
             "command": "cargo run"
+        },
+        {
+            "alias": "cck",
+            "command": "cargo check"
+        },
+        {
+            "alias": "cbu",
+            "command": "cargo build"
+        },
+        {
+            "alias": "cbr",
+            "command": "cargo build --release"
         }
     ]
 }
