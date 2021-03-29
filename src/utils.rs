@@ -21,7 +21,7 @@ pub fn get_shortcut(name: &str) -> Value {
                         println!(
                             "{} {}",
                             "Failed To Parse Response:".to_string().yellow(),
-                            e.to_string().bright_red().bold()
+                            e.to_string().bright_red()
                         );
                         process::exit(1);
                     }
@@ -29,7 +29,7 @@ pub fn get_shortcut(name: &str) -> Value {
             } else {
                 println!(
                     "{} is not a valid shortcut pack.",
-                    name.to_string().bright_magenta().bold()
+                    name.to_string().bright_magenta()
                 );
                 process::exit(1);
             }
@@ -46,8 +46,8 @@ pub fn get_shortcut(name: &str) -> Value {
         Err(err) => {
             println!(
                 "Failed to parse {}.json, {}",
-                name.to_string().bright_magenta().bold(),
-                err.to_string().bright_red().bold(),
+                name.to_string().bright_magenta(),
+                err.to_string().bright_red(),
             );
             process::exit(1);
         }
