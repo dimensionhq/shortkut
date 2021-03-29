@@ -707,6 +707,7 @@ dependencies = [
  "ansi_term",
  "colored",
  "reqwest",
+ "serde_json",
 ]
 
 [[package]]
