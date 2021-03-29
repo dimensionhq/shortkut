@@ -2,7 +2,12 @@ mod utils;
 
 use colored::*;
 use serde_json::Value;
-use std::{env, fs::create_dir, process};
+use std::{
+    env,
+    fs::create_dir,
+    fs::{self, remove_file},
+    process,
+};
 use std::{fs::File, path::Path};
 use std::{io::Write, time::Instant};
 
@@ -42,9 +47,40 @@ fn main() {
             }
         }
         "remove" => {
-            println!("shc {} {}", __VERSION__, "remove".green().bold());
+            println!("shc {} {}", __VERSION__, "remove".bright_green());
+            if args.len() == 3 {
+                let res: Value = utils::get_shortcut(&args[2]);
+                let shortcuts = &res["shortcuts"].as_array().unwrap();
+
+                for object in shortcuts.iter() {
+                    let alias: &str = &object["alias"].as_str().unwrap();
+                    let command: &str = &object["command"].as_str().unwrap();
+                    delete_shortcut(alias, command);
+                }
+
+                let end = Instant::now();
+                println!(
+                    "Removed {} {} in {:.2}s",
+                    shortcuts.len().to_string().bright_green(),
+                    "shortcuts",
+                    (end - start).as_secs_f32()
+                );
+            }
         }
         _ => println!("Invalid Command!"),
+    }
+}
+
+fn delete_shortcut(alias: &str, command: &str) {
+    let bin: String = format!("{}\\{}", env::var("USERPROFILE").unwrap(), ".shc\\");
+    let file_path = format!("{}{}.bat", bin, alias);
+    let contents = fs::read_to_string(&file_path).unwrap();
+
+    if contents.contains(&command) {
+        remove_file(&file_path).unwrap_or_else(|error| {
+            eprintln!("Failed To Delete Shortcut : {}", error);
+            process::exit(1);
+        });
     }
 }
 
@@ -63,7 +99,7 @@ fn generate_shortcut(alias: &str, command: &str) {
                         if !path.exists() {
                             let mut batch = File::create(location).expect("Failed To Create File");
                             batch
-                                .write_all(format!("@echo off\n{}", command).as_bytes())
+                                .write_all(format!("@echo off\n{} %1", command).as_bytes())
                                 .unwrap();
                         }
                     }
