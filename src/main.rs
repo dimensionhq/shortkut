@@ -3,10 +3,10 @@ mod utils;
 use colored::*;
 use indicatif::{ProgressBar, ProgressStyle};
 use serde_json::Value;
-use std::env;
 use std::thread;
 use std::time::Duration;
 use std::time::Instant;
+use std::{env, process};
 
 const __VERSION__: &str = "1.0.0";
 
@@ -25,24 +25,21 @@ fn main() {
 
             if args.len() == 3 {
                 let res: Value = utils::get_shortcut(&args[2]);
-                let shortcuts = &res["shortcuts"].as_array();
-                let pb = ProgressBar::new(shortcuts.unwrap().len() as u64);
+                let shortcuts = &res["shortcuts"].as_array().unwrap();
 
-                pb.set_style(
-                    ProgressStyle::default_bar()
-                        .template("{bar:40.cyan/blue}")
-                        .progress_chars("$$-"),
-                );
-
-                for shortcut in shortcuts.iter() {
-                    let object = &shortcut[0];
-                    let _alias: &str = &object["alias"].as_str().unwrap();
-                    let _command: &str = &object["command"].as_str().unwrap();
-                    thread::sleep(Duration::from_millis(100));
-                    pb.inc(1);
+                for object in shortcuts.iter() {
+                    let alias: &str = &object["alias"].as_str().unwrap();
+                    let command: &str = &object["command"].as_str().unwrap();
+                    generate_shortcut(alias, command);
                 }
 
-                pb.finish()
+                let end = Instant::now();
+                println!(
+                    "Added {} {} in {:.2}s",
+                    shortcuts.len().to_string().bright_green(),
+                    "shortcuts",
+                    (end - start).as_secs_f32()
+                );
             } else {
             }
         }
@@ -56,11 +53,16 @@ fn main() {
     // then we need to create shortcuts
 
     // then we need to print success
-    let end = Instant::now();
-    println!(
-        "Added {} {} in {:.2}s",
-        1.to_string().bright_green(),
-        "shortcut",
-        (end - start).as_secs_f32()
-    );
+}
+
+fn generate_shortcut(alias: &str, command: &str) {
+    match env::consts::OS {
+        "windows" => {}
+        "macos" => {}
+        "linux" => {}
+        &_ => {
+            println!("{}", "OS Not Supported!".bright_yellow());
+            process::exit(1);
+        }
+    }
 }
