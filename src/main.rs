@@ -2,10 +2,9 @@ mod utils;
 
 use colored::*;
 use serde_json::Value;
-use std::process::Command;
-use std::time::Instant;
-use std::{env, process};
+use std::{env, fs::create_dir, process};
 use std::{fs::File, path::Path};
+use std::{io::Write, time::Instant};
 
 const __VERSION__: &str = "1.0.0";
 
@@ -47,22 +46,50 @@ fn main() {
         }
         _ => println!("Invalid Command!"),
     }
-    // get()
-
-    // then we need to create shortcuts
-
-    // then we need to print success
 }
 
 fn generate_shortcut(alias: &str, command: &str) {
     match env::consts::OS {
         "windows" => {
-            // bro why re
+            let bin: String = format!("{}\\{}", env::var("USERPROFILE").unwrap(), ".shc\\");
+
+            let file = Path::new(&bin);
+
+            if !file.exists() {
+                match create_dir(&bin) {
+                    Ok(_) => {
+                        let location: String = format!("{}{}.bat", &bin, &alias);
+                        let path = Path::new(location.as_str());
+                        if !path.exists() {
+                            let mut batch = File::create(location).expect("Failed To Create File");
+                            batch
+                                .write_all(format!("@echo off\n{}", command).as_bytes())
+                                .unwrap();
+                        }
+                    }
+                    Err(err) => {
+                        println!(
+                            "Failed To Create {} : {}",
+                            ".shc".bright_red(),
+                            err.to_string().bright_yellow()
+                        );
+                        process::exit(1);
+                    }
+                };
+            } else {
+                let bin: String = format!("{}\\{}", env::var("USERPROFILE").unwrap(), ".shc\\");
+                let location: String = format!("{}{}.bat", &bin, &alias);
+                let path = Path::new(location.as_str());
+                if !path.exists() {
+                    let mut batch = File::create(location).expect("Failed To Create File");
+                    batch
+                        .write_all(format!("@echo off\n{} %1", command).as_bytes())
+                        .unwrap();
+                }
+            }
         }
         "macos" => {}
-        "linux" => {
-            // work here
-        }
+        "linux" => {}
         &_ => {
             println!("{}", "OS Not Supported!".bright_yellow());
             process::exit(1);
