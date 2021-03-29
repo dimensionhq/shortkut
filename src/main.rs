@@ -1,12 +1,11 @@
 mod utils;
 
 use colored::*;
-use indicatif::{ProgressBar, ProgressStyle};
 use serde_json::Value;
-use std::thread;
-use std::time::Duration;
+use std::process::Command;
 use std::time::Instant;
 use std::{env, process};
+use std::{fs::File, path::Path};
 
 const __VERSION__: &str = "1.0.0";
 
@@ -18,7 +17,7 @@ fn main() {
 
     match command {
         "add" => {
-            println!("shc {} {}", __VERSION__, "add".green().bold());
+            println!("shc {} {}", __VERSION__, "add".bright_green());
 
             // 2 Possibilities : shc add cargo and shc add cru < cargo run
             // TODO: Handle Multiple Shortcuts shc add cargo,git
@@ -57,9 +56,13 @@ fn main() {
 
 fn generate_shortcut(alias: &str, command: &str) {
     match env::consts::OS {
-        "windows" => {}
+        "windows" => {
+            // bro why re
+        }
         "macos" => {}
-        "linux" => {}
+        "linux" => {
+            // work here
+        }
         &_ => {
             println!("{}", "OS Not Supported!".bright_yellow());
             process::exit(1);
