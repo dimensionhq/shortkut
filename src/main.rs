@@ -7,6 +7,7 @@ use std::{
     fs::create_dir,
     fs::{self, remove_file},
     process,
+    str::Split,
 };
 use std::{fs::File, path::Path};
 use std::{io::Write, time::Instant};
@@ -27,19 +28,25 @@ fn main() {
             // TODO: Handle Multiple Shortcuts shc add cargo,git
 
             if args.len() == 3 {
-                let res: Value = utils::get_shortcut(&args[2]);
-                let shortcuts = &res["shortcuts"].as_array().unwrap();
+                let vec: Vec<&str> = args[2].split(",").collect::<Vec<&str>>();
+                let mut total = 0;
 
-                for object in shortcuts.iter() {
-                    let alias: &str = &object["alias"].as_str().unwrap();
-                    let command: &str = &object["command"].as_str().unwrap();
-                    generate_shortcut(alias, command);
+                for arg in vec.iter() {
+                    let res: Value = utils::get_shortcut(&args[2]);
+                    let shortcuts = &res["shortcuts"].as_array().unwrap();
+
+                    for object in shortcuts.iter() {
+                        let alias: &str = &object["alias"].as_str().unwrap();
+                        let command: &str = &object["command"].as_str().unwrap();
+                        generate_shortcut(alias, command);
+                        total += 1;
+                    }
                 }
 
                 let end = Instant::now();
                 println!(
                     "Added {} {} in {:.2}s",
-                    shortcuts.len().to_string().bright_green(),
+                    total.to_string().bright_green(),
                     "shortcuts",
                     (end - start).as_secs_f32()
                 );
@@ -71,18 +78,30 @@ fn main() {
     }
 }
 
-fn delete_shortcut(alias: &str, command: &str) {
-    let bin: String = format!("{}\\{}", env::var("USERPROFILE").unwrap(), ".shc\\");
-    let file_path = format!("{}{}.bat", bin, alias);
-    let contents = fs::read_to_string(&file_path).unwrap();
 
-    if contents.contains(&command) {
-        remove_file(&file_path).unwrap_or_else(|error| {
-            eprintln!("Failed To Delete Shortcut : {}", error);
+fn delete_shortcut(alias: &str, command: &str) {
+    match env::consts::OS {
+        "windows" => {
+            let bin: String = format!("{}\\{}", env::var("USERPROFILE").unwrap(), ".shc\\");
+            let file_path = format!("{}{}.bat", bin, alias);
+            let contents = fs::read_to_string(&file_path).unwrap();
+
+            if contents.contains(&command) {
+                remove_file(&file_path).unwrap_or_else(|error| {
+                    eprintln!("Failed To Delete Shortcut : {}", error);
+                    process::exit(1);
+                });
+            }
+        }
+        "macos" => {}
+        "linux" => {}
+        &_ => {
+            println!("{}", "OS Not Supported!".bright_yellow());
             process::exit(1);
-        });
+        }
     }
 }
+
 
 fn generate_shortcut(alias: &str, command: &str) {
     match env::consts::OS {
