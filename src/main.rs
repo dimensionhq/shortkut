@@ -31,7 +31,7 @@ fn main() {
                     let mut total = 0;
 
                     for arg in vec.iter() {
-                        let res: Value = utils::get_shortcut(&args[2]);
+                        let res: Value = utils::get_shortcut(&arg);
                         let shortcuts = &res["shortcuts"].as_array().unwrap();
 
                         for object in shortcuts.iter() {
@@ -44,12 +44,29 @@ fn main() {
 
                     let end = Instant::now();
                     println!(
-                        "Added {} {} in {:.2}s",
+                        "Added {} {} in {:.3}s",
                         total.to_string().bright_green(),
                         "shortcuts",
                         (end - start).as_secs_f32()
                     );
+                } else if args.len() == 2 {
+                    println!(
+                        "{}",
+                        "Specify A Shortcut To Install\nUsage: shc add shorcut1,shortcut2"
+                            .bright_yellow()
+                    );
+                } else if args.len() == 4 {
+                    let alias = &args[2];
+                    let command = &args[3].to_string().replace("\"", "");
+                    generate_shortcut(alias, command);
+                    let end = Instant::now();
+                    println!(
+                        "Added {} shortcut in {:.3}s",
+                        1.to_string().bright_green(),
+                        (end - start).as_secs_f32()
+                    );
                 } else {
+                    println!("{}", "shc Recieved Unexpected Arguments".bright_yellow());
                 }
             }
             "remove" => {
@@ -66,7 +83,7 @@ fn main() {
 
                     let end = Instant::now();
                     println!(
-                        "Removed {} {} in {:.2}s",
+                        "Removed {} {} in {:.3}s",
                         shortcuts.len().to_string().bright_green(),
                         "shortcuts",
                         (end - start).as_secs_f32()
@@ -75,13 +92,6 @@ fn main() {
             }
             _ => println!("Invalid Command!"),
         }
-    } else if args.len() == 2 {
-        println!(
-            "{}",
-            "Specify A Shortcut To Install\nUsage: shc add <shorcut1,shortcut2>".bright_red()
-        );
-    } else if args.len() == 4 {
-        // shc add cru "cargo run"
     }
 }
 
@@ -90,7 +100,9 @@ fn delete_shortcut(alias: &str, command: &str) {
         "windows" => {
             let bin: String = format!("{}\\{}", env::var("USERPROFILE").unwrap(), ".shc\\");
             let file_path = format!("{}{}.bat", bin, alias);
-            let contents = fs::read_to_string(&file_path).unwrap();
+            let contents = fs::read_to_string(&file_path).unwrap_or_else(|_| {
+                return String::new();
+            });
 
             if contents.contains(&command) {
                 remove_file(&file_path).unwrap_or_else(|error| {
