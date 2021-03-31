@@ -6,6 +6,10 @@
     },
     {
       "alias": "yi",
+      "command": "yarn install"
+    },
+    {
+      "alias": "yin",
       "command": "yarn init"
     },
     {

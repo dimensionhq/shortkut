@@ -14,6 +14,13 @@ fn main() {
     let start = Instant::now();
 
     let args: Vec<String> = env::args().collect();
+    if args.len() == 1 {
+        // Display Help Menu
+        let help = r#"
+
+        "#;
+    }
+
     if args.len() >= 3 {
         let command: &str = &args[1];
 
