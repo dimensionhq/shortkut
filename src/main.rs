@@ -67,7 +67,8 @@ fn main() {
                 } else if args.len() == 2 {
                     println!(
                         "{}",
-                        "Specify A Shortcut To Install\nUsage: shc add shorcut1,shortcut2".bright_yellow()
+                        "Specify A Shortcut To Install\nUsage: shc add shorcut1,shortcut2"
+                            .bright_yellow()
                     );
                 } else if args.len() == 4 {
                     let alias = &args[2];
