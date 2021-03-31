@@ -103,6 +103,8 @@ fn main() {
                         1.to_string().bright_green(),
                         (end - start).as_secs_f32()
                     );
+                } else {
+                    println!("{}", "shc Recieved Unexpected Arguments".bright_yellow());
                 }
             }
             _ => println!("Invalid Command!"),
