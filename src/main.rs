@@ -24,7 +24,7 @@ fn main() {
             "add" => {
                 println!("shc {} {}", __VERSION__, "add".bright_green());
 
-
+                // shc add cargo | shc add cargo,yarn
                 if args.len() == 3 {
                     let vec: Vec<&str> = args[2].split(",").collect::<Vec<&str>>();
                     let mut total = 0;
@@ -86,6 +86,12 @@ fn main() {
                         shortcuts.len().to_string().bright_green(),
                         "shortcuts",
                         (end - start).as_secs_f32()
+                    );
+                } else if args.len() == 2 {
+                    println!(
+                        "{}",
+                        "Specify A Shortcut To Remove\nUsage: shc remove shorcut1,shortcut2"
+                            .bright_yellow()
                     );
                 } else if args.len() == 4 {
                     let alias = &args[2];
