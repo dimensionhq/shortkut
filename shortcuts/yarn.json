@@ -1,0 +1,28 @@
+{
+  "shortcuts": [
+    {
+      "alias": "ya",
+      "command": "yarn add"
+    },
+    {
+      "alias": "yi",
+      "command": "yarn init"
+    },
+    {
+      "alias": "ycl",
+      "command": "yarn autoclean"
+    },
+    {
+      "alias": "yck",
+      "command": "yarn check"
+    },
+    {
+      "alias": "yau",
+      "command": "yarn audit"
+    },
+    {
+      "alias": "yup",
+      "command": "yarn upgrade"
+    }
+  ]
+}
