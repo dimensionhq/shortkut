@@ -31,7 +31,7 @@ fn main() {
                     let mut total = 0;
 
                     for arg in vec.iter() {
-                        let res: Value = utils::get_shortcut(&arg);
+                        let res: Value = utils::get_shortcut(arg);
                         let shortcuts = &res["shortcuts"].as_array().unwrap();
 
                         for object in shortcuts.iter() {
@@ -135,7 +135,7 @@ fn generate_shortcut(alias: &str, command: &str) {
                         if !path.exists() {
                             let mut batch = File::create(location).expect("Failed To Create File");
                             batch
-                                .write_all(format!("@echo off\n{} %1", command).as_bytes())
+                                .write_all(format!("@echo off\n{} %*", command).as_bytes())
                                 .unwrap();
                         }
                     }
@@ -155,7 +155,7 @@ fn generate_shortcut(alias: &str, command: &str) {
                 if !path.exists() {
                     let mut batch = File::create(location).expect("Failed To Create File");
                     batch
-                        .write_all(format!("@echo off\n{} %1", command).as_bytes())
+                        .write_all(format!("@echo off\n{} %*", command).as_bytes())
                         .unwrap();
                 }
             }
