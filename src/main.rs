@@ -11,22 +11,21 @@ use std::{io::Write, time::Instant};
 const __VERSION__: &str = "1.0.0";
 
 fn main() {
+    ansi_term::enable_ansi_support().unwrap();
     let start = Instant::now();
 
     let args: Vec<String> = env::args().collect();
     if args.len() == 1 {
         // Display Help Menu
         let help = format!(
-            r#"
-{}
+            r#"{}
 {} add - Add a shortcut
 {} remove - Remove a shortcut
-{} show - Show a shortcut
-        "#,
-            format!("shc {}", __VERSION__),
-            "*".magenta(),
-            "*".magenta(),
-            "*".magenta(),
+{} show - Show a shortcut"#,
+            format!("shc {}", __VERSION__.bright_green()),
+            "*".bright_magenta().bold(),
+            "*".bright_magenta().bold(),
+            "*".bright_magenta().bold(),
         );
         println!("{}", help);
     }
@@ -36,7 +35,7 @@ fn main() {
 
         match command {
             "add" => {
-                println!("shc {} {}", __VERSION__, "add".green());
+                println!("shc {} {}", __VERSION__, "add".bright_green().bold());
 
                 // shc add cargo | shc add cargo,yarn
                 if args.len() == 3 {
@@ -56,19 +55,19 @@ fn main() {
                     }
 
                     let display_string = installed.join(", ");
-                    println!("Added Shortcuts: {}", display_string.yellow());
+                    println!("Added Shortcuts: {}", display_string.bright_yellow());
 
                     let end = Instant::now();
                     println!(
                         "Added {} {} in {:.2}s",
-                        installed.len().to_string().green(),
+                        installed.len().to_string().bright_green(),
                         "shortcuts",
                         (end - start).as_secs_f32()
                     );
                 } else if args.len() == 2 {
                     println!(
                         "{}",
-                        "Specify A Shortcut To Install\nUsage: shc add shorcut1,shortcut2".yellow()
+                        "Specify A Shortcut To Install\nUsage: shc add shorcut1,shortcut2".bright_yellow()
                     );
                 } else if args.len() == 4 {
                     let alias = &args[2];
@@ -77,15 +76,15 @@ fn main() {
                     let end = Instant::now();
                     println!(
                         "Added {} shortcut in {:.2}s",
-                        1.to_string().green(),
+                        1.to_string().bright_green(),
                         (end - start).as_secs_f32()
                     );
                 } else {
-                    println!("{}", "shc Recieved Unexpected Arguments".yellow());
+                    println!("{}", "shc Recieved Unexpected Arguments".bright_yellow());
                 }
             }
             "remove" => {
-                println!("shc {} {}", __VERSION__, "remove".green());
+                println!("shc {} {}", __VERSION__, "remove".bright_green().bold());
                 if args.len() == 3 {
                     let vec: Vec<&str> = args[2].split(",").collect::<Vec<&str>>();
                     let mut removed: Vec<String> = vec![];
@@ -101,14 +100,13 @@ fn main() {
                             removed.push(alias.to_string());
                         }
                     }
-
                     let display_string = removed.join(", ");
-                    println!("Removed Shortcuts: {}", display_string.yellow());
+                    println!("Removed Shortcuts: {}", display_string.bright_yellow());
 
                     let end = Instant::now();
                     println!(
                         "Removed {} {} in {:.2}s",
-                        removed.len().to_string().green(),
+                        removed.len().to_string().bright_green(),
                         "shortcuts",
                         (end - start).as_secs_f32()
                     );
@@ -116,7 +114,7 @@ fn main() {
                     println!(
                         "{}",
                         "Specify A Shortcut To Remove\nUsage: shc remove shorcut1,shortcut2"
-                            .yellow()
+                            .bright_yellow()
                     );
                 } else if args.len() == 4 {
                     let alias = &args[2];
@@ -125,15 +123,15 @@ fn main() {
                     let end = Instant::now();
                     println!(
                         "Removed {} shortcut in {:.2}s",
-                        1.to_string().green(),
+                        1.to_string().bright_green(),
                         (end - start).as_secs_f32()
                     );
                 } else {
-                    println!("{}", "shc Recieved Unexpected Arguments".yellow());
+                    println!("{}", "shc Recieved Unexpected Arguments".bright_yellow());
                 }
             }
             "show" => {
-                println!("shc {} {}", __VERSION__, "show".green());
+                println!("shc {} {}", __VERSION__, "show".bright_green().bold());
                 if args.len() == 3 {
                     let res: Value = utils::get_shortcut(&args[2]);
                     let shortcuts = &res["shortcuts"].as_array().unwrap();
@@ -141,18 +139,18 @@ fn main() {
                     for object in shortcuts.iter() {
                         let alias: &str = &object["alias"].as_str().unwrap();
                         let command: &str = &object["command"].as_str().unwrap();
-                        println!("{} : {}", alias.cyan(), command.yellow())
+                        println!("{} : {}", alias.cyan(), command.bright_yellow())
                     }
 
                     let end = Instant::now();
                     println!(
                         "Found {} {} in {:.2}s",
-                        shortcuts.len().to_string().green(),
+                        shortcuts.len().to_string().bright_green(),
                         "shortcuts",
                         (end - start).as_secs_f32()
                     );
                 } else {
-                    println!("{}", "shc Recieved Unexpected Arguments".yellow());
+                    println!("{}", "shc Recieved Unexpected Arguments".bright_yellow());
                 }
             }
             _ => println!("Invalid Command!"),
@@ -179,7 +177,7 @@ fn delete_shortcut(alias: &str, command: &str) {
         "macos" => {}
         "linux" => {}
         &_ => {
-            println!("{}", "OS Not Supported!".yellow());
+            println!("{}", "OS Not Supported!".bright_yellow());
             process::exit(1);
         }
     }
@@ -207,8 +205,8 @@ fn generate_shortcut(alias: &str, command: &str) {
                     Err(err) => {
                         println!(
                             "Failed To Create {} : {}",
-                            ".shc".red(),
-                            err.to_string().yellow()
+                            ".shc".bright_red(),
+                            err.to_string().bright_yellow()
                         );
                         process::exit(1);
                     }
@@ -228,7 +226,7 @@ fn generate_shortcut(alias: &str, command: &str) {
         "macos" => {}
         "linux" => {}
         &_ => {
-            println!("{}", "OS Not Supported!".yellow());
+            println!("{}", "OS Not Supported!".bright_yellow());
             process::exit(1);
         }
     }
