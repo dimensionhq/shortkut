@@ -27,7 +27,7 @@ fn main() {
                 // shc add cargo | shc add cargo,yarn
                 if args.len() == 3 {
                     let vec: Vec<&str> = args[2].split(",").collect::<Vec<&str>>();
-                    let mut total = 0;
+                    let mut installed: Vec<String> = vec![];
 
                     for arg in vec.iter() {
                         let res: Value = utils::get_shortcut(arg);
@@ -37,14 +37,17 @@ fn main() {
                             let alias: &str = &object["alias"].as_str().unwrap();
                             let command: &str = &object["command"].as_str().unwrap();
                             generate_shortcut(alias, command);
-                            total += 1;
+                            installed.push(alias.to_string());
                         }
                     }
+
+                    let display_string = installed.join(", ");
+                    println!("Added Shortcuts: {}", display_string.bright_yellow());
 
                     let end = Instant::now();
                     println!(
                         "Added {} {} in {:.2}s",
-                        total.to_string().bright_green(),
+                        installed.len().to_string().bright_green(),
                         "shortcuts",
                         (end - start).as_secs_f32()
                     );
@@ -71,19 +74,28 @@ fn main() {
             "remove" => {
                 println!("shc {} {}", __VERSION__, "remove".bright_green());
                 if args.len() == 3 {
-                    let res: Value = utils::get_shortcut(&args[2]);
-                    let shortcuts = &res["shortcuts"].as_array().unwrap();
+                    let vec: Vec<&str> = args[2].split(",").collect::<Vec<&str>>();
+                    let mut removed: Vec<String> = vec![];
 
-                    for object in shortcuts.iter() {
-                        let alias: &str = &object["alias"].as_str().unwrap();
-                        let command: &str = &object["command"].as_str().unwrap();
-                        delete_shortcut(alias, command);
+                    for arg in vec.iter() {
+                        let res: Value = utils::get_shortcut(arg);
+                        let shortcuts = &res["shortcuts"].as_array().unwrap();
+
+                        for object in shortcuts.iter() {
+                            let alias: &str = &object["alias"].as_str().unwrap();
+                            let command: &str = &object["command"].as_str().unwrap();
+                            delete_shortcut(alias, command);
+                            removed.push(alias.to_string());
+                        }
                     }
+
+                    let display_string = removed.join(", ");
+                    println!("Removed Shortcuts: {}", display_string.bright_yellow());
 
                     let end = Instant::now();
                     println!(
                         "Removed {} {} in {:.2}s",
-                        shortcuts.len().to_string().bright_green(),
+                        removed.len().to_string().bright_green(),
                         "shortcuts",
                         (end - start).as_secs_f32()
                     );
@@ -101,6 +113,29 @@ fn main() {
                     println!(
                         "Removed {} shortcut in {:.2}s",
                         1.to_string().bright_green(),
+                        (end - start).as_secs_f32()
+                    );
+                } else {
+                    println!("{}", "shc Recieved Unexpected Arguments".bright_yellow());
+                }
+            }
+            "show" => {
+                println!("shc {} {}", __VERSION__, "show".bright_green());
+                if args.len() == 3 {
+                    let res: Value = utils::get_shortcut(&args[2]);
+                    let shortcuts = &res["shortcuts"].as_array().unwrap();
+
+                    for object in shortcuts.iter() {
+                        let alias: &str = &object["alias"].as_str().unwrap();
+                        let command: &str = &object["command"].as_str().unwrap();
+                        println!("{} : {}", alias.bright_cyan(), command.bright_yellow())
+                    }
+
+                    let end = Instant::now();
+                    println!(
+                        "Found {} {} in {:.2}s",
+                        shortcuts.len().to_string().bright_green(),
+                        "shortcuts",
                         (end - start).as_secs_f32()
                     );
                 } else {
