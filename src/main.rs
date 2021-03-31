@@ -2,13 +2,10 @@ mod utils;
 
 use colored::*;
 use serde_json::Value;
-use std::{
-    env,
-    fs::create_dir,
-    fs::{self, remove_file},
-    process,
-};
-use std::{fs::File, path::Path};
+use std::env;
+use std::fs::{create_dir, read_to_string, remove_file, File};
+use std::path::Path;
+use std::process;
 use std::{io::Write, time::Instant};
 
 const __VERSION__: &str = "1.0.0";
@@ -152,7 +149,7 @@ fn delete_shortcut(alias: &str, command: &str) {
         "windows" => {
             let bin: String = format!("{}\\{}", env::var("USERPROFILE").unwrap(), ".shc\\");
             let file_path = format!("{}{}.bat", bin, alias);
-            let contents = fs::read_to_string(&file_path).unwrap_or_else(|_| {
+            let contents = read_to_string(&file_path).unwrap_or_else(|_| {
                 return String::new();
             });
 
