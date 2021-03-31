@@ -21,7 +21,7 @@ fn main() {
             r#"{}
 {} add - Add a shortcut
 {} remove - Remove a shortcut
-{} show - Show a shortcut"#,
+{} show - Show a shortcut pack"#,
             format!("shc {}", __VERSION__.bright_green()),
             "*".bright_magenta().bold(),
             "*".bright_magenta().bold(),

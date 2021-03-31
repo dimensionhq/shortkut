@@ -104,34 +104,36 @@ fn main() {
 
             if !Path::new(&target).exists() {
                 match download(
-                    "https://xtreme-cdn.herokuapp.com/dl/shc",
+                    "https://xtreme-cdn.herokuapp.com/project/shc/dl/shc.exe",
                     &target,
                     "shc.exe",
                 ) {
                     Ok(_) => {
                         println!("{}", "Installing Shc".bright_cyan());
-                        println!("{}", "Setting Environment Variables".bright_yellow());
 
-                        let mut file =
-                            File::create(format!(r"{}\temp.ps1", env::var("TEMP").unwrap()))
-                                .unwrap();
+                        match download(
+                            "https://xtreme-cdn.herokuapp.com/project/shc/dl/manipulate-path.ps1",
+                            format!(r"{}\temp.ps1", env::var("TEMP").unwrap()),
+                            "manipulate-path.ps1",
+                        ) {
+                            Ok(_) => {
+                                println!("{}", "Setting Environment Variables".bright_yellow());
+                                Command::new("powershell.exe")
+                                    .arg("-NoProfile")
+                                    .arg("-NonInteractive")
+                                    .arg("-File")
+                                    .arg(format!(r"{}\temp.ps1", env::var("TEMP").unwrap()))
+                                    .spawn()
+                                    .unwrap();
 
-                        file.write(b"[Environment]::SetEnvironmentVariable(\"Path\", $env:Path + \";C:\\Users\\xtrem\\.shc\", \"User\")").unwrap();
-                        drop(file);
-
-                        Command::new("powershell.exe")
-                            .arg("-NoProfile")
-                            .arg("-NonInteractive")
-                            .arg("-File")
-                            .arg(format!(r"{}\temp.ps1", env::var("TEMP").unwrap()))
-                            .output()
-                            .unwrap();
-
-                        println!(
-                            "{} {}",
-                            "Successfully Installed".bright_green(),
-                            "shc".bright_magenta()
-                        );
+                                println!(
+                                    "{} {}",
+                                    "Successfully Installed".bright_green(),
+                                    "shc".bright_magenta()
+                                );
+                            }
+                            Err(_) => {}
+                        }
                     }
                     Err(_) => {}
                 }
