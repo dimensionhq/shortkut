@@ -24,7 +24,6 @@ fn main() {
             "add" => {
                 println!("shc {} {}", __VERSION__, "add".bright_green());
 
-                // TODO: Handle Multiple Shortcuts shc add cargo,git
 
                 if args.len() == 3 {
                     let vec: Vec<&str> = args[2].split(",").collect::<Vec<&str>>();
@@ -44,7 +43,7 @@ fn main() {
 
                     let end = Instant::now();
                     println!(
-                        "Added {} {} in {:.3}s",
+                        "Added {} {} in {:.2}s",
                         total.to_string().bright_green(),
                         "shortcuts",
                         (end - start).as_secs_f32()
@@ -61,7 +60,7 @@ fn main() {
                     generate_shortcut(alias, command);
                     let end = Instant::now();
                     println!(
-                        "Added {} shortcut in {:.3}s",
+                        "Added {} shortcut in {:.2}s",
                         1.to_string().bright_green(),
                         (end - start).as_secs_f32()
                     );
@@ -83,9 +82,19 @@ fn main() {
 
                     let end = Instant::now();
                     println!(
-                        "Removed {} {} in {:.3}s",
+                        "Removed {} {} in {:.2}s",
                         shortcuts.len().to_string().bright_green(),
                         "shortcuts",
+                        (end - start).as_secs_f32()
+                    );
+                } else if args.len() == 4 {
+                    let alias = &args[2];
+                    let command = &args[3].to_string().replace("\"", "");
+                    delete_shortcut(alias, command);
+                    let end = Instant::now();
+                    println!(
+                        "Removed {} shortcut in {:.2}s",
+                        1.to_string().bright_green(),
                         (end - start).as_secs_f32()
                     );
                 }
