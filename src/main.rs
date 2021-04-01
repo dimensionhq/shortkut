@@ -2,13 +2,18 @@ mod utils;
 
 use colored::*;
 use serde_json::Value;
-use std::env;
+use std::{env, ffi::OsString, fs::read_dir, io::Read};
 use std::fs::{create_dir, read_to_string, remove_file, File};
 use std::path::Path;
 use std::process;
 use std::{io::Write, time::Instant};
 
 const __VERSION__: &str = "1.0.0";
+
+// TODO: Allow Command File To Be A List Of Commands
+//
+//
+//
 
 fn main() {
     ansi_term::enable_ansi_support().unwrap();
@@ -134,6 +139,23 @@ fn main() {
             "show" => {
                 println!("shc {} {}", __VERSION__, "show".bright_green().bold());
                 if args.len() == 3 {
+                    let paths = read_dir(format!("{}{}", env::var("USERPROFILE").unwrap(), "\\.shc")).unwrap();
+
+                    for path in paths {
+                        let file_name = format!("{}", path.unwrap().file_name().to_os_string().to_str().unwrap());
+                        let comp = format!("{}{}", OsString::from(&args[2]).to_os_string().to_str().unwrap(), ".bat"); 
+                        
+                        if file_name == comp {
+                            let mut command = String::new();
+                            // Open file and display command
+                            let mut file = File::open(format!("{}{}{}", env::var("USERPROFILE").unwrap(), "\\.shc\\", &file_name)).unwrap();
+                            file.read_to_string(&mut command).unwrap();
+                            command = command.replace("@echo off", "").replace("%*", "").replace("\n", "");
+                            println!("{} : {}", &args[2].cyan(), command.bright_yellow());
+                            process::exit(0);
+                        }
+                    }
+                    
                     let res: Value = utils::get_shortcut(&args[2]);
                     let shortcuts = &res["shortcuts"].as_array().unwrap();
 
@@ -150,7 +172,10 @@ fn main() {
                         "shortcuts",
                         (end - start).as_secs_f32()
                     );
-                } else {
+                } else if args.len() == 4 {
+                    
+                } 
+                else {
                     println!("{}", "shc Recieved Unexpected Arguments".bright_yellow());
                 }
             }
