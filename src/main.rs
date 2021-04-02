@@ -146,8 +146,7 @@ fn main() {
                         let comp = format!("{}{}", OsString::from(&args[2]).to_os_string().to_str().unwrap(), ".bat"); 
                         
                         if file_name == comp {
-                            let mut command = String::new();
-                            // Open file and display command
+                            let mut command = String::new();                            // Open file and display command
                             let mut file = File::open(format!("{}{}{}", env::var("USERPROFILE").unwrap(), "\\.shc\\", &file_name)).unwrap();
                             file.read_to_string(&mut command).unwrap();
                             command = command.replace("@echo off", "").replace("%*", "").replace("\n", "");
@@ -249,7 +248,9 @@ fn generate_shortcut(alias: &str, command: &str) {
                 }
             }
         }
-        "macos" => {}
+        "macos" => {
+            // alias alias='command'
+        }
         "linux" => {}
         &_ => {
             println!("{}", "OS Not Supported!".bright_yellow());
