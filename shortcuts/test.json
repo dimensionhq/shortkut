@@ -1,0 +1,13 @@
+{
+  "shortcuts": [
+    {
+      "name": "init",
+      "command": [
+        "git init",
+        "git add .",
+        "git commit -m %*",
+        "git push origin master"
+      ]
+    }
+  ]
+}

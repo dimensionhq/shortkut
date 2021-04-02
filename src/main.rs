@@ -11,7 +11,7 @@ use std::{io::Write, time::Instant};
 const __VERSION__: &str = "1.0.0";
 
 // TODO: Allow Command File To Be A List Of Commands
-//
+// TODO: Allow For Description Of What A Shortcut Does
 //
 //
 
@@ -53,8 +53,16 @@ fn main() {
 
                         for object in shortcuts.iter() {
                             let alias: &str = &object["alias"].as_str().unwrap();
-                            let command: &str = &object["command"].as_str().unwrap();
-                            generate_shortcut(alias, command);
+                            let is_array = object["command"].is_array(); 
+                            
+                            if !is_array {
+                                let command = &object["command"].as_str().unwrap();
+                                generate_shortcut(alias, command);
+                            } else {
+                                let commands = object["command"].as_array().unwrap();
+                                generate_shortcut_multi(alias, commands);
+                            }
+                            
                             installed.push(alias.to_string());
                         }
                     }
@@ -200,6 +208,59 @@ fn delete_shortcut(alias: &str, command: &str) {
             }
         }
         "macos" => {}
+        "linux" => {}
+        &_ => {
+            println!("{}", "OS Not Supported!".bright_yellow());
+            process::exit(1);
+        }
+    }
+}
+
+fn generate_shortcut_multi(alias: &str, command: &Vec<Value>) {
+    match env::consts::OS {
+        "windows" => {
+            let command_string: &String = &command.iter().map(|value| value.to_string()).collect::<String>();
+            
+            let bin: String = format!("{}\\{}", env::var("USERPROFILE").unwrap(), ".shc\\");
+
+            let file = Path::new(&bin);
+
+            if !file.exists() {
+                match create_dir(&bin) {
+                    Ok(_) => {
+                        let location: String = format!("{}{}.bat", &bin, &alias);
+                        let path = Path::new(location.as_str());
+                        if !path.exists() {
+                            let mut batch = File::create(location).expect("Failed To Create File");
+                            batch
+                                .write_all(format!("@echo off\n{}", command_string).as_bytes())
+                                .unwrap();
+                        }
+                    }
+                    Err(err) => {
+                        println!(
+                            "Failed To Create {} : {}",
+                            ".shc".bright_red(),
+                            err.to_string().bright_yellow()
+                        );
+                        process::exit(1);
+                    }
+                };
+            } else {
+                let bin: String = format!("{}\\{}", env::var("USERPROFILE").unwrap(), ".shc\\");
+                let location: String = format!("{}{}.bat", &bin, &alias);
+                let path = Path::new(location.as_str());
+                if !path.exists() {
+                    let mut batch = File::create(location).expect("Failed To Create File");
+                    batch
+                        .write_all(format!("@echo off\n{} %*", command_string).as_bytes())
+                        .unwrap();
+                }
+            }
+        }
+        "macos" => {
+            // alias alias='command'
+        }
         "linux" => {}
         &_ => {
             println!("{}", "OS Not Supported!".bright_yellow());

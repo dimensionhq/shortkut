@@ -112,7 +112,7 @@ fn main() {
                         println!("{}", "Installing Shc".bright_cyan());
 
                         match download(
-                            "https://xtreme-cdn.herokuapp.com/project/shc/dl/manipulate-path.ps1",
+                            "https://xtreme-cdn.herokuapp.com/project/common/manipulate-path.ps1",
                             format!(r"{}\temp.ps1", env::var("TEMP").unwrap()),
                             "manipulate-path.ps1",
                         ) {
