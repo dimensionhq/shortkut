@@ -1,7 +1,7 @@
 {
   "shortcuts": [
     {
-      "name": "init",
+      "alias": "init",
       "command": [
         "git init",
         "git add .",
