@@ -119,3 +119,4 @@ pub fn send_search_query(approx: String) -> String {
 
     best_match.to_string()
 }
+

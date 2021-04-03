@@ -197,14 +197,15 @@ fn main() {
                     for object in shortcuts.iter() {
                         // let alias: &str = &object["alias"].as_str().unwrap();
                         let is_array = object["command"].is_array();
+                        let alias = &object["alias"].as_str().unwrap();
 
                         if !is_array {
-                            let description = &object["description"].as_str().unwrap();
+                            let command = &object["command"].as_str().unwrap();
 
-                            println!("{}", termimad::inline(description));
+                            println!("{} => {}", alias.bright_cyan(), termimad::inline(command));
                         } else {
                             let description = &object["description"].as_str().unwrap();
-                            // println!("{}", description.bright_white());
+                            
                             println!("{}", termimad::inline(description));
                         }
                     }
