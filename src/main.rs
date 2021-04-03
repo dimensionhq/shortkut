@@ -204,7 +204,8 @@ fn main() {
                             println!("{}", termimad::inline(description));
                         } else {
                             let description = &object["description"].as_str().unwrap();
-                            println!("{}", description.bright_white());
+                            // println!("{}", description.bright_white());
+                            println!("{}", termimad::inline(description));
                         }
                     }
 
