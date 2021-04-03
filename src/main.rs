@@ -7,6 +7,7 @@ use std::path::Path;
 use std::process;
 use std::{env, ffi::OsString, fs::read_dir, io::Read};
 use std::{io::Write, time::Instant};
+use termimad;
 
 const __VERSION__: &str = "1.0.0";
 
@@ -195,8 +196,16 @@ fn main() {
 
                     for object in shortcuts.iter() {
                         let alias: &str = &object["alias"].as_str().unwrap();
-                        let command: &str = &object["command"].as_str().unwrap();
-                        println!("{} : {}", alias.cyan(), command.bright_yellow())
+                        let is_array = object["command"].is_array();
+
+                        if !is_array {
+                            let description = &object["description"].as_str().unwrap();
+
+                            println!("{}", termimad::inline(description));
+                        } else {
+                            let description = &object["description"].as_str().unwrap();
+                            println!("{}", description.bright_white());
+                        }
                     }
 
                     let end = Instant::now();
@@ -221,7 +230,12 @@ fn main() {
                         println!("{}", response.bold().bright_yellow());
                     }
                 } else {
-                    println!("{}", "No Matches Found!".bold().bright_red());
+                    println!(
+                        "{} {} {}",
+                        0.to_string().bold().bright_red(),
+                        "Matches Found For",
+                        &approx.bold().bright_yellow().underline(),
+                    );
                     process::exit(1);
                 }
 

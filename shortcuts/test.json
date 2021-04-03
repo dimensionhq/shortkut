@@ -2,6 +2,7 @@
   "shortcuts": [
     {
       "alias": "init",
+      "description": "Push to github using `deploy \"Initial Commit\"`",
       "command": [
         "git init",
         "git add .",
