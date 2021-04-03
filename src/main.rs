@@ -2,10 +2,10 @@ mod utils;
 
 use colored::*;
 use serde_json::Value;
-use std::{env, ffi::OsString, fs::read_dir, io::Read};
 use std::fs::{create_dir, read_to_string, remove_file, File};
 use std::path::Path;
 use std::process;
+use std::{env, ffi::OsString, fs::read_dir, io::Read};
 use std::{io::Write, time::Instant};
 
 const __VERSION__: &str = "1.0.0";
@@ -25,8 +25,10 @@ fn main() {
 {} add - Add a shortcut
 {} remove - Remove a shortcut
 {} show - Show a shortcut pack
-{} search - Search for a shortcut pack"#,
+{} search - Search for a shortcut pack
+{} export - Export a list of your current shortcuts"#,
             format!("shc {}", __VERSION__.bright_green()),
+            "*".bright_magenta().bold(),
             "*".bright_magenta().bold(),
             "*".bright_magenta().bold(),
             "*".bright_magenta().bold(),
@@ -53,8 +55,8 @@ fn main() {
 
                         for object in shortcuts.iter() {
                             let alias: &str = &object["alias"].as_str().unwrap();
-                            let is_array = object["command"].is_array(); 
-                            
+                            let is_array = object["command"].is_array();
+
                             if !is_array {
                                 let command = &object["command"].as_str().unwrap();
                                 generate_shortcut(alias, command);
@@ -62,7 +64,7 @@ fn main() {
                                 let commands = object["command"].as_array().unwrap();
                                 generate_shortcut_multi(alias, commands);
                             }
-                            
+
                             installed.push(alias.to_string());
                         }
                     }
@@ -109,8 +111,8 @@ fn main() {
 
                         for object in shortcuts.iter() {
                             let alias: &str = &object["alias"].as_str().unwrap();
-                            let is_array = object["command"].is_array(); 
-                            
+                            let is_array = object["command"].is_array();
+
                             if !is_array {
                                 let command = &object["command"].as_str().unwrap();
                                 generate_shortcut(alias, command);
@@ -154,22 +156,40 @@ fn main() {
             "show" => {
                 println!("shc {} {}", __VERSION__, "show".bright_green().bold());
                 if args.len() == 3 {
-                    let paths = read_dir(format!("{}{}", env::var("USERPROFILE").unwrap(), "\\.shc")).unwrap();
+                    let paths =
+                        read_dir(format!("{}{}", env::var("USERPROFILE").unwrap(), "\\.shc"))
+                            .unwrap();
 
                     for path in paths {
-                        let file_name = format!("{}", path.unwrap().file_name().to_os_string().to_str().unwrap());
-                        let comp = format!("{}{}", OsString::from(&args[2]).to_os_string().to_str().unwrap(), ".bat"); 
-                        
+                        let file_name = format!(
+                            "{}",
+                            path.unwrap().file_name().to_os_string().to_str().unwrap()
+                        );
+                        let comp = format!(
+                            "{}{}",
+                            OsString::from(&args[2]).to_os_string().to_str().unwrap(),
+                            ".bat"
+                        );
+
                         if file_name == comp {
-                            let mut command = String::new();                            // Open file and display command
-                            let mut file = File::open(format!("{}{}{}", env::var("USERPROFILE").unwrap(), "\\.shc\\", &file_name)).unwrap();
+                            let mut command = String::new(); // Open file and display command
+                            let mut file = File::open(format!(
+                                "{}{}{}",
+                                env::var("USERPROFILE").unwrap(),
+                                "\\.shc\\",
+                                &file_name
+                            ))
+                            .unwrap();
                             file.read_to_string(&mut command).unwrap();
-                            command = command.replace("@echo off", "").replace("%*", "").replace("\n", "");
+                            command = command
+                                .replace("@echo off", "")
+                                .replace("%*", "")
+                                .replace("\n", "");
                             println!("{} : {}", &args[2].cyan(), command.bright_yellow());
                             process::exit(0);
                         }
                     }
-                    
+
                     let res: Value = utils::get_shortcut(&args[2]);
                     let shortcuts = &res["shortcuts"].as_array().unwrap();
 
@@ -187,11 +207,31 @@ fn main() {
                         (end - start).as_secs_f32()
                     );
                 } else if args.len() == 4 {
-                    
-                } 
-                else {
+                } else {
                     println!("{}", "shc Recieved Unexpected Arguments".bright_yellow());
                 }
+            }
+            "search" => {
+                let approx = &args[2];
+                let response = utils::send_search_query(String::from(approx));
+                if response != "" {
+                    if &response == approx {
+                        println!("{}", response.bold().bright_green());
+                    } else {
+                        println!("{}", response.bold().bright_yellow());
+                    }
+                } else {
+                    println!("{}", "No Matches Found!".bold().bright_red());
+                    process::exit(1);
+                }
+
+                let end = Instant::now();
+                println!(
+                    "Found {} {} in {:.2}s",
+                    "1".to_string().bright_green(),
+                    "shortcut",
+                    (end - start).as_secs_f32()
+                );
             }
             _ => println!("Invalid Command!"),
         }
@@ -201,7 +241,10 @@ fn main() {
 fn delete_shortcut_multi(alias: &str, command: &Vec<Value>) {
     match env::consts::OS {
         "windows" => {
-            let command_string: &String = &command.iter().map(|value| format!("{}\n", value.to_string().replace("\"", ""))).collect::<String>();
+            let command_string: &String = &command
+                .iter()
+                .map(|value| format!("{}\n", value.to_string().replace("\"", "")))
+                .collect::<String>();
 
             let bin: String = format!("{}\\{}", env::var("USERPROFILE").unwrap(), ".shc\\");
             let file_path = format!("{}{}.bat", bin, alias);
@@ -253,8 +296,11 @@ fn delete_shortcut(alias: &str, command: &str) {
 fn generate_shortcut_multi(alias: &str, command: &Vec<Value>) {
     match env::consts::OS {
         "windows" => {
-            let command_string: &String = &command.iter().map(|value| format!("{}\n", value.to_string().replace("\"", ""))).collect::<String>();
-            
+            let command_string: &String = &command
+                .iter()
+                .map(|value| format!("{}\n", value.to_string().replace("\"", "")))
+                .collect::<String>();
+
             let bin: String = format!("{}\\{}", env::var("USERPROFILE").unwrap(), ".shc\\");
 
             let file = Path::new(&bin);
