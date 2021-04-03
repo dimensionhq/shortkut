@@ -203,7 +203,7 @@ fn main() {
                             let command = &object["command"].as_str().unwrap();
 
                             println!(
-                                "{} => {}",
+                                "{} : {}",
                                 alias.bright_cyan(),
                                 termimad::inline(format!("`{}`", command).as_str())
                             );
