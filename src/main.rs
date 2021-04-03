@@ -202,10 +202,14 @@ fn main() {
                         if !is_array {
                             let command = &object["command"].as_str().unwrap();
 
-                            println!("{} => {}", alias.bright_cyan(), termimad::inline(command));
+                            println!(
+                                "{} => {}",
+                                alias.bright_cyan(),
+                                termimad::inline(format!("`{}`", command).as_str())
+                            );
                         } else {
                             let description = &object["description"].as_str().unwrap();
-                            
+
                             println!("{}", termimad::inline(description));
                         }
                     }
