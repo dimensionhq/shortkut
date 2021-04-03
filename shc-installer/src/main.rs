@@ -1,7 +1,7 @@
 use std::{
     env,
-    fs::{self, create_dir, File},
-    io::{self, copy, Read, Write},
+    fs::{self, create_dir},
+    io::{self, copy, Read},
     path::Path,
     process::{self, Command},
 };
@@ -113,7 +113,7 @@ fn main() {
 
                         match download(
                             "https://xtreme-cdn.herokuapp.com/project/common/manipulate-path.ps1",
-                            format!(r"{}\temp.ps1", env::var("TEMP").unwrap()),
+                            format!(r"{}\temp.ps1", env::var("TEMP").unwrap()).as_str(),
                             "manipulate-path.ps1",
                         ) {
                             Ok(_) => {
