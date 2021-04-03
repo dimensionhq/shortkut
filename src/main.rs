@@ -11,8 +11,6 @@ use std::{io::Write, time::Instant};
 const __VERSION__: &str = "1.0.0";
 
 // TODO: Allow Command File To Be A List Of Commands
-// TODO: Allow For Description Of What A Shortcut Does
-//
 //
 
 fn main() {
@@ -26,8 +24,10 @@ fn main() {
             r#"{}
 {} add - Add a shortcut
 {} remove - Remove a shortcut
-{} show - Show a shortcut pack"#,
+{} show - Show a shortcut pack
+{} search - Search for a shortcut pack"#,
             format!("shc {}", __VERSION__.bright_green()),
+            "*".bright_magenta().bold(),
             "*".bright_magenta().bold(),
             "*".bright_magenta().bold(),
             "*".bright_magenta().bold(),
@@ -109,8 +109,15 @@ fn main() {
 
                         for object in shortcuts.iter() {
                             let alias: &str = &object["alias"].as_str().unwrap();
-                            let command: &str = &object["command"].as_str().unwrap();
-                            delete_shortcut(alias, command);
+                            let is_array = object["command"].is_array(); 
+                            
+                            if !is_array {
+                                let command = &object["command"].as_str().unwrap();
+                                generate_shortcut(alias, command);
+                            } else {
+                                let commands = object["command"].as_array().unwrap();
+                                delete_shortcut_multi(alias, commands);
+                            }
                             removed.push(alias.to_string());
                         }
                     }
@@ -187,6 +194,33 @@ fn main() {
                 }
             }
             _ => println!("Invalid Command!"),
+        }
+    }
+}
+
+fn delete_shortcut_multi(alias: &str, command: &Vec<Value>) {
+    match env::consts::OS {
+        "windows" => {
+            let command_string: &String = &command.iter().map(|value| format!("{}\n", value.to_string().replace("\"", ""))).collect::<String>();
+
+            let bin: String = format!("{}\\{}", env::var("USERPROFILE").unwrap(), ".shc\\");
+            let file_path = format!("{}{}.bat", bin, alias);
+            let contents = read_to_string(&file_path).unwrap_or_else(|_| {
+                return String::new();
+            });
+
+            if contents.contains(&command_string.as_str()) {
+                remove_file(&file_path).unwrap_or_else(|error| {
+                    eprintln!("Failed To Delete Shortcut : {}", error);
+                    process::exit(1);
+                });
+            }
+        }
+        "macos" => {}
+        "linux" => {}
+        &_ => {
+            println!("{}", "OS Not Supported!".bright_yellow());
+            process::exit(1);
         }
     }
 }
