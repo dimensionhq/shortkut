@@ -2,7 +2,7 @@
   "shortcuts": [
     {
       "alias": "init",
-      "description": "### Deploy Code To Github With A Single Command\nUsage init \"commit name\"",
+      "description": "### Deploy Code To Github With A Single Command\nUsage:  `init \"commit name\"`",
       "command": [
         "git init",
         "git add .",

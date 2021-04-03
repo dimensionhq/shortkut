@@ -195,7 +195,7 @@ fn main() {
                     let shortcuts = &res["shortcuts"].as_array().unwrap();
 
                     for object in shortcuts.iter() {
-                        let alias: &str = &object["alias"].as_str().unwrap();
+                        // let alias: &str = &object["alias"].as_str().unwrap();
                         let is_array = object["command"].is_array();
 
                         if !is_array {
