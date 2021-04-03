@@ -219,7 +219,7 @@ fn delete_shortcut(alias: &str, command: &str) {
 fn generate_shortcut_multi(alias: &str, command: &Vec<Value>) {
     match env::consts::OS {
         "windows" => {
-            let command_string: &String = &command.iter().map(|value| value.to_string()).collect::<String>();
+            let command_string: &String = &command.iter().map(|value| format!("{}\n", value.to_string().replace("\"", ""))).collect::<String>();
             
             let bin: String = format!("{}\\{}", env::var("USERPROFILE").unwrap(), ".shc\\");
 
@@ -253,7 +253,7 @@ fn generate_shortcut_multi(alias: &str, command: &Vec<Value>) {
                 if !path.exists() {
                     let mut batch = File::create(location).expect("Failed To Create File");
                     batch
-                        .write_all(format!("@echo off\n{} %*", command_string).as_bytes())
+                        .write_all(format!("@echo off\n{}", command_string).as_bytes())
                         .unwrap();
                 }
             }
