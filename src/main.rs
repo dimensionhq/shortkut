@@ -2,7 +2,8 @@ mod utils;
 
 use colored::*;
 use serde_json::Value;
-use std::{error::Error, fs::{File, OpenOptions, create_dir, read_dir, read_to_string, remove_file}, process::Command};
+use std::fs::{File, OpenOptions, create_dir, read_dir, read_to_string, remove_file};
+use std::process::Command;
 use std::path::Path;
 use std::{process, env};
 use std::io::{Read, Write};
