@@ -49,7 +49,7 @@ fn download(url: &str, destination: &str, file_name: &str) -> Result<(), ExitFai
     };
 
     let mut request = client.get(url.as_str());
-    let pb = ProgressBar::new(total_size - 150000);
+    let pb = ProgressBar::new(total_size);
 
     pb.set_style(
         ProgressStyle::default_bar()
@@ -118,13 +118,13 @@ fn main() {
                         ) {
                             Ok(_) => {
                                 println!("{}", "Setting Environment Variables".bright_yellow());
-                                Command::new("powershell.exe")
-                                    .arg("-NoProfile")
-                                    .arg("-NonInteractive")
-                                    .arg("-File")
-                                    .arg(format!(r"{}\temp.ps1", env::var("TEMP").unwrap()))
-                                    .spawn()
-                                    .unwrap();
+                                Command::new(format!(
+                                    "powershell.exe \"{}\" \"{}\\.shc\"",
+                                    env::var("TEMP").unwrap(),
+                                    env::var("USERPROFILE").unwrap()
+                                ))
+                                .spawn()
+                                .unwrap();
 
                                 println!(
                                     "{} {}",
