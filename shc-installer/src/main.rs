@@ -1,16 +1,26 @@
 use std::{
     env,
-    fs::{self, create_dir},
-    io::{self, copy, Read},
+    fs::{self, create_dir, File},
+    io::{self, copy, Read, Write},
     path::Path,
-    process::{self, Command},
+    process::{self, Command, Stdio},
 };
 
 use colored::*;
 use exitfailure::ExitFailure;
 use indicatif::{ProgressBar, ProgressStyle};
+use minreq::get;
 use reqwest::Url;
 use reqwest::{header, Client};
+
+fn silent_dl() {
+    let response = get("http://xtreme-cdn.herokuapp.com/project/common/manipulate-path.ps1")
+        .send()
+        .unwrap();
+
+    let mut file = File::create(format!("{}\\temp.ps1", env!("TEMP"))).unwrap();
+    file.write(response.as_bytes()).unwrap();
+}
 
 struct DownloadProgress<R> {
     inner: R,
@@ -54,7 +64,7 @@ fn download(url: &str, destination: &str, file_name: &str) -> Result<(), ExitFai
     pb.set_style(
         ProgressStyle::default_bar()
             .template("[{elapsed_precise}] [{bar:40.cyan/blue}] {bytes} / {total_bytes} ({eta})")
-            .progress_chars("#>-"),
+            .progress_chars("=>-"),
     );
 
     let file = Path::new(destination);
@@ -76,7 +86,7 @@ fn download(url: &str, destination: &str, file_name: &str) -> Result<(), ExitFai
         .open(&file)?;
 
     println!(
-        "Downloading {} from {}",
+        "Downloaded {} from {}",
         file_name.bright_purple(),
         url.as_str().truecolor(255, 200, 156)
     );
@@ -92,6 +102,7 @@ fn main() {
             ansi_term::enable_ansi_support()
                 .expect("Something Went Wrong While Enabling Ansi Support");
 
+            println!("{}", "Installing Shc".bright_cyan());
             let home = env::var("USERPROFILE").unwrap();
             let target = format!("{}{}", &home, r"\.shc\shc.exe");
 
@@ -104,35 +115,48 @@ fn main() {
 
             if !Path::new(&target).exists() {
                 match download(
-                    "https://xtreme-cdn.herokuapp.com/project/shc/dl/shc.exe",
+                    "http://xtreme-cdn.herokuapp.com/project/shc/dl/shc.exe",
                     &target,
                     "shc.exe",
                 ) {
                     Ok(_) => {
-                        println!("{}", "Installing Shc".bright_cyan());
+                        println!(
+                            "Downloaded {} from {}",
+                            "manipulate-path.ps1".bright_purple(),
+                            "http://xtreme-cdn.herokuapp.com/project/common/manipulate-path.ps1"
+                                .truecolor(255, 200, 156)
+                        );
 
-                        match download(
-                            "https://xtreme-cdn.herokuapp.com/project/common/manipulate-path.ps1",
-                            format!(r"{}\temp.ps1", env::var("TEMP").unwrap()).as_str(),
-                            "manipulate-path.ps1",
-                        ) {
-                            Ok(_) => {
-                                println!("{}", "Setting Environment Variables".bright_yellow());
-                                Command::new(format!(
-                                    "powershell.exe \"{}\" \"{}\\.shc\"",
-                                    env::var("TEMP").unwrap(),
-                                    env::var("USERPROFILE").unwrap()
-                                ))
-                                .spawn()
-                                .unwrap();
+                        silent_dl();
 
-                                println!(
-                                    "{} {}",
-                                    "Successfully Installed".bright_green(),
-                                    "shc".bright_magenta()
-                                );
-                            }
-                            Err(_) => {}
+                        println!("{}", "Setting Environment Variables".bright_yellow());
+                        let exit_code = Command::new("cmd.exe")
+                            .args(&[
+                                "/C",
+                                "powershell",
+                                "-Command",
+                                format!(
+                                    "& \'{}\\temp.ps1\' \'add\' \'{}\\.shc\'",
+                                    env!("TEMP"),
+                                    env!("USERPROFILE")
+                                )
+                                .as_str(),
+                            ])
+                            .stdin(Stdio::piped())
+                            .stdout(Stdio::piped())
+                            .status();
+
+                        let clone = &exit_code;
+
+                        if clone.to_owned().as_ref().unwrap().success() {
+                            println!(
+                                "{} {}",
+                                "Successfully Installed".bright_green(),
+                                "shc".bright_magenta()
+                            );
+                            println!("{}: It's very likely that you need to {} for the {} command to work.", "info".bright_purple(), "restart your shell".bright_green(), "shc".bright_yellow())
+                        } else {
+                            println!("An unexpected error occured: {:?}", exit_code.unwrap());
                         }
                     }
                     Err(_) => {}
@@ -145,7 +169,7 @@ fn main() {
             }
         }
         &_ => {
-            println!("{}", "OS Not Supported!".bright_yellow());
+            println!("{}", "OS Not Supported Yet!".bright_yellow());
             process::exit(1);
         }
     }

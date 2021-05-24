@@ -655,6 +655,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "minreq"
+version = "2.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "781e56f7d29192378f0a04948b1e6aec67ce561273b2dd26ac510bbe88d7be70"
+
+[[package]]
 name = "mio"
 version = "0.6.23"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1208,6 +1214,7 @@ dependencies = [
  "exitfailure",
  "failure",
  "indicatif",
+ "minreq",
  "reqwest",
 ]
 

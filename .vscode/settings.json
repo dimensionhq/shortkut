@@ -1,3 +1,4 @@
 {
-    "rust-analyzer.inlayHints.enable": false
+    "rust-analyzer.inlayHints.enable": false,
+    "python.pythonPath": "C:\\Python39\\python.exe"
 }

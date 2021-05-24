@@ -2,13 +2,13 @@ mod utils;
 
 use colored::*;
 use serde_json::Value;
-use std::fs::{File, OpenOptions, create_dir, read_dir, read_to_string, remove_file};
-use std::process::Command;
-use std::path::Path;
-use std::{process, env};
-use std::io::{Read, Write};
 use std::ffi::OsString;
+use std::fs::{create_dir, read_dir, read_to_string, remove_file, File, OpenOptions};
+use std::io::{Read, Write};
+use std::path::Path;
+use std::process::Command;
 use std::time::Instant;
+use std::{env, process};
 use termimad;
 
 const __VERSION__: &str = "1.0.0";
@@ -413,7 +413,7 @@ fn generate_shortcut(alias: &str, command: &str) {
         "macos" => {
             // alias alias='command'
             let location: String = String::from("~/.bashrc");
-            
+
             let path = Path::new(location.as_str());
 
             if path.exists() {
@@ -422,29 +422,42 @@ fn generate_shortcut(alias: &str, command: &str) {
                         // Write Alias To File (Append)
                         let write_string = format!("alias {}='{}'", alias, command);
                         file.write_all(write_string.as_bytes()).unwrap();
-                    },
+                    }
                     Err(err) => {
-                        println!("{}", format!("shc must be run with {} permissions", "sudo".underline()).bright_red().bold());
+                        println!(
+                            "{}",
+                            format!("shc must be run with {} permissions", "sudo".underline())
+                                .bright_red()
+                                .bold()
+                        );
                         println!("{}", err);
                     }
                 };
             } else {
                 match File::create(location) {
                     Ok(mut file) => {
-                        file.write_all(format!("alias {}='{}'", alias, command).as_bytes()).unwrap();
-                    },
+                        file.write_all(format!("alias {}='{}'", alias, command).as_bytes())
+                            .unwrap();
+                    }
                     Err(err) => {
-                        println!("{}", format!("shc must be run with {} permissions", "sudo".underline()).bright_red().bold());
+                        println!(
+                            "{}",
+                            format!("shc must be run with {} permissions", "sudo".underline())
+                                .bright_red()
+                                .bold()
+                        );
                         println!("{}", err);
                     }
-                } 
+                }
             }
 
-            Command::new("zsh").arg("-c").arg("'source ~/.bashrc'").spawn().unwrap();
+            Command::new("zsh")
+                .arg("-c")
+                .arg("'source ~/.bashrc'")
+                .spawn()
+                .unwrap();
         }
-        "linux" => {
-            
-        }
+        "linux" => {}
         &_ => {
             println!("{}", "OS Not Supported!".bright_yellow());
             process::exit(1);
