@@ -99,6 +99,8 @@ pub fn send_search_query(approx: String) -> String {
         }
     }
 
+    // TODO: Use difflib instead
+
     let searcher = SkimMatcherV2::default();
     let mut best_match: String = String::new();
     let mut max = 0;
@@ -119,4 +121,3 @@ pub fn send_search_query(approx: String) -> String {
 
     best_match.to_string()
 }
-

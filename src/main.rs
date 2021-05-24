@@ -3,7 +3,7 @@ mod utils;
 use colored::*;
 use serde_json::Value;
 use std::ffi::OsString;
-use std::fs::{create_dir, read_dir, read_to_string, remove_file, File, OpenOptions};
+use std::fs::{self, create_dir, read_dir, read_to_string, remove_file, File, OpenOptions};
 use std::io::{Read, Write};
 use std::path::Path;
 use std::process::Command;
@@ -15,9 +15,19 @@ const __VERSION__: &str = "1.0.0";
 
 // TODO: Allow Command File To Be A List Of Commands
 
+// TODO: Check for .shc
+fn initialize() {
+    let directory = format!(r"{}\.shc", env!("USERPROFILE"));
+    let path = Path::new(directory.as_str());
+    if !path.exists() {
+        fs::create_dir(directory).unwrap();
+    }
+}
+
 fn main() {
     ansi_term::enable_ansi_support().unwrap();
     let start = Instant::now();
+    initialize();
 
     let args: Vec<String> = env::args().collect();
     if args.len() == 1 {
@@ -187,7 +197,13 @@ fn main() {
                                 .replace("@echo off", "")
                                 .replace("%*", "")
                                 .replace("\n", "");
-                            println!("{} : {}", &args[2].cyan(), command.bright_yellow());
+
+                            println!(
+                                "{} {} {}",
+                                &args[2].bright_cyan(),
+                                "=".bright_magenta(),
+                                command
+                            );
                             process::exit(0);
                         }
                     }
@@ -204,9 +220,10 @@ fn main() {
                             let command = &object["command"].as_str().unwrap();
 
                             println!(
-                                "{} : {}",
+                                "{} {} {}",
                                 alias.bright_cyan(),
-                                termimad::inline(format!("`{}`", command).as_str())
+                                "=".bright_magenta(),
+                                command
                             );
                         } else {
                             let description = &object["description"].as_str().unwrap();

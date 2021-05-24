@@ -1,0 +1,15 @@
+  
+{
+    "shortcuts": [
+      {
+        "alias": "init",
+        "description": "Deploy Code To Github With A Single Command\nUsage:  `init \"commit name\" \"repository-url\"`",
+        "command": [
+          "git init",
+          "git add .",
+          "git commit -m %*",
+          "git push origin master"
+        ]
+      }
+    ]
+  }
