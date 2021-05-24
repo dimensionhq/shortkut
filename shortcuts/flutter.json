@@ -1,0 +1,32 @@
+{
+    "shortcuts": [
+        {
+            "alias": "pg",
+            "command": "flutter pub get"
+        },
+        {
+            "alias": "fr",
+            "command": "flutter run"
+        },
+        {
+            "alias": "fdo",
+            "command": "flutter doctor"
+        },
+        {
+            "alias": "fb",
+            "command": "flutter build"
+        },
+        {
+            "alias": "fc",
+            "command": "flutter clean"
+        },
+        {
+            "alias": "ff",
+            "command": "flutter format"
+        },
+        {
+            "alias": "fh",
+            "command": "flutter --help"
+        }
+    ]
+}

@@ -5,6 +5,10 @@
       "command": "yarn add"
     },
     {
+      "alias": "yr",
+      "command": "yarn remove"
+    },
+    {
       "alias": "yi",
       "command": "yarn install"
     },
