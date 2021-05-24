@@ -1,0 +1,28 @@
+{
+    "shortcuts": [
+        {
+            "alias": "ni",
+            "command": "npm install"
+        },
+        {
+            "alias": "ndt",
+            "command": "npm doctor"
+        },
+        {
+            "alias": "nu",
+            "command": "npm audit"
+        },
+        {
+            "alias": "npub",
+            "command": "npm publish"
+        },
+        {
+            "alias": "nu",
+            "command": "npm uninstall"
+        },
+        {
+            "alias": "nc",
+            "command": "npm cache"
+        }
+    ]
+}
