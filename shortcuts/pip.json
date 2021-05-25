@@ -1,0 +1,28 @@
+{
+    "shortcuts": [
+        {
+            "alias": "pi",
+            "command": "pip install"
+        },
+        {
+            "alias": "pu",
+            "command": "pip uninstall"
+        },
+        {
+            "alias": "pf",
+            "command": "pip freeze"
+        },
+        {
+            "alias": "pl",
+            "command": "pip list"
+        },
+        {
+            "alias": "pd",
+            "command": "pip download"
+        },
+        {
+            "alias": "pw",
+            "command": "pip wheel"
+        }
+    ]
+}
