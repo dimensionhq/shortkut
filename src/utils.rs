@@ -1,43 +1,31 @@
-use crate::commands::remove;
 use crate::commands::{add, export, show};
+use crate::commands::{remove, search};
 use crate::helper::{delete_shortcut, generate_shortcut};
 use crate::model::shortkut::ShortKut;
 use colored::*;
-use reqwest::blocking;
+use minreq::get;
 use std::{process, time::Instant};
 
 pub fn get_shortcut(name: &str) -> ShortKut {
     let mut res: String = String::new();
 
-    match blocking::get(format!(
-        "https://raw.githubusercontent.com/XtremeDevX/shc/master/shortcuts/{}.json",
+    match get(format!(
+        "http://shortkut-api.us-east-1.elasticbeanstalk.com/api/v1/{}",
         name
-    )) {
-        Ok(response) => {
-            if response.status() == reqwest::StatusCode::OK {
-                // Response Code Is 200 OK
-                match response.text() {
-                    Ok(text) => {
-                        res = text;
-                    }
-                    Err(e) => {
-                        println!(
-                            "{} {}",
-                            "Failed To Parse Response:".to_string().yellow(),
-                            e.to_string().bright_red()
-                        );
-                        process::exit(1);
-                    }
-                }
-            } else {
-                println!(
-                    "{} is not a valid shortcut pack.",
-                    name.to_string().bright_magenta()
-                );
-                process::exit(1);
-            }
+    ))
+    .send()
+    {
+        Ok(data) => {
+            res = data.as_str().unwrap().to_string();
         }
-        Err(err) => println!("Failed To Request {}.json => {}", name, err),
+        Err(err) => {
+            eprintln!(
+                "\nAn error occured while requesting {}.json.\n{}: {}",
+                name.bright_purple().bold(),
+                "error".bright_red().bold(),
+                err
+            );
+        }
     }
 
     let data: ShortKut;
@@ -120,6 +108,7 @@ links:
                         );
 
                         println!("{}", error);
+                        process::exit(1);
                     }
                     "remove" => {
                         let error = format!(
@@ -155,6 +144,7 @@ links:
                         );
 
                         println!("{}", error);
+                        process::exit(1);
                     }
                     "show" => {
                         let error = format!(
@@ -172,6 +162,7 @@ examples:
                         );
 
                         println!("{}", error);
+                        process::exit(1);
                     }
                     "search" => {
                         let error = format!(
@@ -185,6 +176,7 @@ examples:
                         );
 
                         println!("{}", error);
+                        process::exit(1);
                     }
                     _ => {}
                 }
@@ -200,12 +192,23 @@ examples:
             "show" => {
                 show::show();
             }
+            "search" => {
+                search::search();
+                let end = Instant::now();
+                println!(
+                    "Found {} {} in {:.2}s",
+                    "1".to_string().bright_green(),
+                    "shortcut",
+                    (end - start).as_secs_f32()
+                );
+            }
             _ => {
                 println!(
                     "{}: {} is not a valid command.",
                     "error".bright_red().bold(),
                     args[1].bright_cyan()
                 );
+                process::exit(1);
             }
         },
         4 => match args[1].as_str() {

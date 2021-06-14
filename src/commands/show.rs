@@ -78,10 +78,18 @@ pub fn show() {
     }
 
     let end = Instant::now();
+
+    let shortcut: &str;
+    if shortcuts.len() == 1 {
+        shortcut = "shortcut"
+    } else {
+        shortcut = "shortcuts"
+    }
+
     println!(
         "Found {} {} in {:.2}s",
         shortcuts.len().to_string().bright_green(),
-        "shortcuts",
+        shortcut,
         (end - start).as_secs_f32()
     );
 }
