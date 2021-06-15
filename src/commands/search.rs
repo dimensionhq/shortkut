@@ -6,13 +6,11 @@ pub fn search() {
     let args: Vec<String> = env::args().collect();
     let approx_string = &args[2];
 
-    let data = match get("http://shortkut-api.us-east-1.elasticbeanstalk.com/api/v1/shortkut-list")
-        .send()
-    {
+    let data = match get("http://shortkut-api.herokuapp.com/api/v1/shortkut-list").send() {
         Ok(data) => data,
         Err(err) => {
             eprintln!(
-                "\nAn error occured while requesting {}.json.\n{}: {}",
+                "An error occured while requesting {}.json.\n\n{}: {}",
                 "shortkut-list".bright_purple().bold(),
                 "error".bright_red().bold(),
                 err
