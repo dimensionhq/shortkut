@@ -1,7 +1,7 @@
 use colored::Colorize;
 use serde_json::Value;
 use std::env;
-use std::fs::{create_dir, read_dir, read_to_string, remove_file, File, OpenOptions};
+use std::fs::{create_dir, read_to_string, remove_file, File, OpenOptions};
 use std::io::Write;
 use std::path::Path;
 use std::process;
@@ -209,23 +209,6 @@ pub fn generate_shortcut(alias: &str, command: &str) {
             println!("{}", "OS Not Supported!".bright_yellow());
             process::exit(1);
         }
-    }
-}
-
-#[allow(dead_code)]
-fn export_shortcuts() {
-    File::create("shortcuts.shk").unwrap();
-
-    match env::consts::OS {
-        "windows" => {
-            let list = read_dir(format!(r"{}\.shc", env!("USERPROFILE"))).unwrap();
-            let mut files: Vec<String> = vec![];
-            for f in list {
-                let f = f.unwrap();
-                files.push(f.path().into_os_string().into_string().unwrap());
-            }
-        }
-        _ => {}
     }
 }
 

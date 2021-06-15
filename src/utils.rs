@@ -1,4 +1,4 @@
-use crate::commands::{add, export, show};
+use crate::commands::{add, show};
 use crate::commands::{remove, search};
 use crate::helper::{delete_shortcut, generate_shortcut};
 use crate::model::shortkut::ShortKut;
@@ -53,10 +53,8 @@ pub fn parse() {
 {} add - Add a shortcut
 {} remove - Remove a shortcut
 {} show - Show a shortcut pack
-{} search - Search for a shortcut pack
-{} export - Export a list of your current shortcuts"#,
+{} search - Search for a shortcut pack"#,
                 format!("shc {}", "1.0.0".bright_green()),
-                "*".bright_magenta().bold(),
                 "*".bright_magenta().bold(),
                 "*".bright_magenta().bold(),
                 "*".bright_magenta().bold(),
@@ -66,9 +64,7 @@ pub fn parse() {
         }
         2 => {
             if args[1] == "--version" {
-                println!("shc v{}", "1.0.0".bright_green().bold())
-            } else if args.contains(&"export".to_string()) {
-                export::export();
+                println!("shc version {}", "1.0.0".bright_green().bold())
             } else {
                 match args[1].as_str() {
                     "add" => {
@@ -148,12 +144,17 @@ usage:
   {} show {}
 
 examples:
-  {} show {}"#,
+  {} show {}
+  
+links: 
+  {}: {}"#,
                             "error".bright_red().bold(),
                             "shc".bright_green().bold(),
                             "<pack-name>".bright_cyan().bold(),
                             "shc".bright_green().bold(),
-                            "flutter".bright_cyan().bold()
+                            "flutter".bright_cyan().bold(),
+                            "1".blue(),
+                            "https://shortkut.sh/docs/show".bright_purple().underline(),
                         );
 
                         println!("{}", error);
@@ -163,17 +164,39 @@ examples:
                         let error = format!(
                             r#"{}: expected approximate name of a shortkut pack to search for.
 usage:
-  shc search <pack-name>
+  {} search {}
 
 examples:
-  shc search flutter"#,
-                            "error".bright_red().bold()
+  {} search {}
+  {} search {}
+
+links:
+  {}: {}
+  "#,
+                            "error".bright_red().bold(),
+                            "shc".bold().bright_green(),
+                            "<approx-name>".bold().bright_cyan(),
+                            "shc".bold().bright_green(),
+                            "flutter".bold().bright_cyan(),
+                            "shc".bold().bright_green(),
+                            "yarn".bold().bright_cyan(),
+                            "1".bright_blue(),
+                            "https://shortkut.sh/docs/search"
+                                .bright_magenta()
+                                .underline()
                         );
 
                         println!("{}", error);
                         process::exit(1);
                     }
-                    _ => {}
+                    _ => {
+                        println!(
+                            "{}: {} is not a valid command.",
+                            "error".bright_red().bold(),
+                            args[1].bright_cyan()
+                        );
+                        process::exit(1);
+                    }
                 }
             }
         }

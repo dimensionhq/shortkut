@@ -20,22 +20,24 @@ pub fn search() {
     };
     let shortkut_list = serde_json::from_str(data.as_str().unwrap()).unwrap();
 
-    let matches = difflib::get_close_matches(approx_string, shortkut_list, 1, 0.6);
-
-    let mut response = "";
+    let matches = difflib::get_close_matches(approx_string, shortkut_list, 2, 0.6);
 
     if matches.len() == 1 {
-        response = matches[0];
-    }
-
-    if response != "" {
-        if response.clone() == approx_string.as_str() {
-            println!("{}", response.bold().bright_green());
+        if matches[0] == approx_string {
+            println!("{}", matches[0].bold().bright_green());
         } else {
-            println!("{}", response.bold().bright_yellow());
+            println!("{}", matches[0].bright_yellow());
         }
-    } else {
+    } else if matches.len() == 0 {
         println!("{}", "No Matches Found!".bold().bright_red());
         std::process::exit(1);
+    } else {
+        for res in matches {
+            if res.clone() == approx_string.as_str() {
+                println!("{}", res.bold().bright_green());
+            } else {
+                println!("{}", res.bold().bright_yellow());
+            }
+        }
     }
 }
