@@ -9,12 +9,7 @@ use std::{process, time::Instant};
 pub fn get_shortcut(name: &str) -> ShortKut {
     let mut res: String = String::new();
 
-    match get(format!(
-        "http://shortkut-api.us-east-1.elasticbeanstalk.com/api/v1/{}",
-        name
-    ))
-    .send()
-    {
+    match get(format!("http://shortkut-api.herokuapp.com/api/v1/{}", name)).send() {
         Ok(data) => {
             res = data.as_str().unwrap().to_string();
         }
