@@ -2,10 +2,9 @@ use colored::Colorize;
 use serde_json::Value;
 use std::env;
 use std::fs::{create_dir, read_to_string, remove_file, File, OpenOptions};
-use std::io::Write;
+use std::io::{Read, Write};
 use std::path::Path;
 use std::process;
-use std::process::Command;
 
 pub fn delete_shortcut_multi(alias: &str, command: &Vec<Value>) {
     match env::consts::OS {
@@ -37,7 +36,7 @@ pub fn delete_shortcut_multi(alias: &str, command: &Vec<Value>) {
     }
 }
 
-pub fn delete_shortcut(alias: &str, command: &str) {
+pub fn delete_shortcut(alias: &str, command: &str, shell: String) {
     match env::consts::OS {
         "windows" => {
             let bin: String = format!("{}\\{}", env::var("USERPROFILE").unwrap(), ".shc\\");
@@ -118,7 +117,7 @@ pub fn generate_shortcut_multi(alias: &str, command: &Vec<Value>) {
     }
 }
 
-pub fn generate_shortcut(alias: &str, command: &str) {
+pub fn generate_shortcut(alias: &str, command: &str, shell: String) {
     match env::consts::OS {
         "windows" => {
             let bin: String = format!("{}\\{}", env::var("USERPROFILE").unwrap(), ".shc\\");
@@ -158,17 +157,33 @@ pub fn generate_shortcut(alias: &str, command: &str) {
                 }
             }
         }
-        "macos" => {
-            let location: String = String::from("~/.bashrc");
+        &_ => {
+            let location: String = format!("{}/.bashrc", home::home_dir().unwrap().display());
 
             let path = Path::new(location.as_str());
 
             if path.exists() {
-                match OpenOptions::new().append(true).open(location) {
+                match OpenOptions::new().read(true).append(true).open(location) {
                     Ok(mut file) => {
+                        let mut data = String::new();
+                        file.read_to_string(&mut data).unwrap_or_else(|err| {
+                            println!("{}", err);
+                            std::process::exit(1)
+                        });
+
+                        let write_string = format!(
+                            r#"
+
+function {}() {{
+    {} "$@"
+}}"#,
+                            alias, command
+                        );
+
                         // Write Alias To File (Append)
-                        let write_string = format!("alias {}='{}'", alias, command);
-                        file.write_all(write_string.as_bytes()).unwrap();
+                        if !data.contains(&write_string) {
+                            file.write_all(write_string.as_bytes()).unwrap();
+                        }
                     }
                     Err(err) => {
                         println!(
@@ -183,7 +198,7 @@ pub fn generate_shortcut(alias: &str, command: &str) {
             } else {
                 match File::create(location) {
                     Ok(mut file) => {
-                        file.write_all(format!("alias {}='{}'", alias, command).as_bytes())
+                        file.write_all(format!("alias {}='{}'\n", alias, command).as_bytes())
                             .unwrap();
                     }
                     Err(err) => {
@@ -197,24 +212,15 @@ pub fn generate_shortcut(alias: &str, command: &str) {
                     }
                 }
             }
-
-            Command::new("zsh")
-                .arg("-c")
-                .arg("'source ~/.bashrc'")
-                .spawn()
-                .unwrap();
-        }
-        "linux" => {}
-        &_ => {
-            println!("{}", "OS Not Supported!".bright_yellow());
-            process::exit(1);
         }
     }
 }
 
 pub fn initialize() {
-    let directory = format!(r"{}\.shc", env!("USERPROFILE"));
+    let directory = format!(r"{}/.shc", home::home_dir().unwrap().display());
+
     let path = Path::new(directory.as_str());
+
     if !path.exists() {
         create_dir(directory).unwrap();
     }

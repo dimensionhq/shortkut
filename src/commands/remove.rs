@@ -4,7 +4,7 @@ use crate::utils;
 use colored::Colorize;
 use std::time::Instant;
 
-pub fn remove() {
+pub fn remove(shell: String) {
     println!("shc {} {}", "1.0.0", "remove".bright_green().bold());
 
     let start = Instant::now();
@@ -23,7 +23,7 @@ pub fn remove() {
 
             if !is_array {
                 let command = &object.command.as_str().unwrap();
-                delete_shortcut(alias, command);
+                delete_shortcut(alias, command, shell.clone());
             } else {
                 let commands = &object.command.as_array().unwrap();
                 delete_shortcut_multi(alias, commands);

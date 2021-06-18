@@ -4,7 +4,7 @@ use crate::utils;
 use colored::Colorize;
 use std::time::Instant;
 
-pub fn add() {
+pub fn add(shell: String) {
     println!("shc {} {}", "1.0.0", "add".bright_green().bold());
 
     let args: Vec<String> = std::env::args().collect();
@@ -23,7 +23,7 @@ pub fn add() {
 
             if !is_array {
                 let command = &object.command.as_str().unwrap();
-                generate_shortcut(alias, command);
+                generate_shortcut(alias, command, shell.clone());
             } else {
                 let commands = &object.command.as_array().unwrap();
                 generate_shortcut_multi(alias, commands);

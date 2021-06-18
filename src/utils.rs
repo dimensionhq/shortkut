@@ -41,7 +41,7 @@ pub fn get_shortcut(name: &str) -> ShortKut {
     data
 }
 
-pub fn parse() {
+pub fn parse(shell: String) {
     let start = Instant::now();
     let args: Vec<String> = std::env::args().collect();
 
@@ -202,16 +202,51 @@ links:
         }
         3 => match args[1].as_str() {
             "add" => {
-                add::add();
+                add::add(shell.clone());
+                if vec!["linux", "macos"].contains(&std::env::consts::OS.to_string().as_str()) {
+                    match shell.as_str() {
+                        "/bin/bash" => {
+                            println!(
+                                "Use {} to start using added shortkuks.",
+                                "source ~/.bashrc".bright_cyan().bold()
+                            );
+                        }
+                        "/bin/zsh" => {
+                            println!(
+                                "Use {} to start using added shortkuks.",
+                                "source ~/.zshrc".bright_cyan().bold()
+                            );
+                        }
+                        _ => {}
+                    }
+                };
             }
             "remove" => {
-                remove::remove();
+                remove::remove(shell.clone());
+
+                if vec!["linux", "macos"].contains(&std::env::consts::OS.to_string().as_str()) {
+                    match shell.as_str() {
+                        "/bin/bash" => {
+                            println!(
+                                "Use {} to start using added shortkuks.",
+                                "source ~/.bashrc".bright_cyan().bold()
+                            );
+                        }
+                        "/bin/zsh" => {
+                            println!(
+                                "Use {} to start using added shortkuks.",
+                                "source ~/.zshrc".bright_cyan().bold()
+                            );
+                        }
+                        _ => {}
+                    }
+                };
             }
             "show" => {
-                show::show();
+                show::show(shell);
             }
             "search" => {
-                search::search();
+                search::search(shell);
                 let end = Instant::now();
                 println!(
                     "Found {} {} in {:.2}s",
@@ -235,26 +270,62 @@ links:
 
                 let alias = &args[2];
                 let command = &args[3].to_string().replace("\"", "");
-                generate_shortcut(alias, command);
+                generate_shortcut(alias, command, shell.clone());
                 let end = Instant::now();
                 println!(
                     "Added {} shortcut in {:.2}s",
                     1.to_string().bright_green(),
                     (end - start).as_secs_f32()
                 );
+
+                if vec!["linux", "macos"].contains(&std::env::consts::OS.to_string().as_str()) {
+                    match shell.as_str() {
+                        "/bin/bash" => {
+                            println!(
+                                "Use {} to start using added shortkuks.",
+                                "source ~/.bashrc".bright_cyan().bold()
+                            );
+                        }
+                        "/bin/zsh" => {
+                            println!(
+                                "Use {} to start using added shortkuks.",
+                                "source ~/.zshrc".bright_cyan().bold()
+                            );
+                        }
+                        _ => {}
+                    }
+                };
             }
             "remove" => {
                 println!("shc {} {}", "1.0.0", "remove".bright_green().bold());
 
                 let alias = &args[2];
                 let command = &args[3].to_string().replace("\"", "");
-                delete_shortcut(alias, command);
+                delete_shortcut(alias, command, shell.clone());
                 let end = Instant::now();
                 println!(
                     "Removed {} shortcut in {:.2}s",
                     1.to_string().bright_green(),
                     (end - start).as_secs_f32()
                 );
+
+                if vec!["linux", "macos"].contains(&std::env::consts::OS.to_string().as_str()) {
+                    match shell.as_str() {
+                        "/bin/bash" => {
+                            println!(
+                                "Use {} to start using added shortkuks.",
+                                "source ~/.bashrc".bright_cyan().bold()
+                            );
+                        }
+                        "/bin/zsh" => {
+                            println!(
+                                "Use {} to start using added shortkuks.",
+                                "source ~/.zshrc".bright_cyan().bold()
+                            );
+                        }
+                        _ => {}
+                    }
+                };
             }
             _ => {}
         },
