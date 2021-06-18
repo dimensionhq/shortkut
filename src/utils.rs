@@ -207,13 +207,13 @@ links:
                     match shell.as_str() {
                         "/bin/bash" => {
                             println!(
-                                "Use {} to start using added shortkuks.",
+                                "Use {} to start using added shortkuts.",
                                 "source ~/.bashrc".bright_cyan().bold()
                             );
                         }
                         "/bin/zsh" => {
                             println!(
-                                "Use {} to start using added shortkuks.",
+                                "Use {} to start using added shortkuts.",
                                 "source ~/.zshrc".bright_cyan().bold()
                             );
                         }
@@ -228,13 +228,13 @@ links:
                     match shell.as_str() {
                         "/bin/bash" => {
                             println!(
-                                "Use {} to start using added shortkuks.",
+                                "Use {} to start using added shortkuts.",
                                 "source ~/.bashrc".bright_cyan().bold()
                             );
                         }
                         "/bin/zsh" => {
                             println!(
-                                "Use {} to start using added shortkuks.",
+                                "Use {} to start using added shortkuts.",
                                 "source ~/.zshrc".bright_cyan().bold()
                             );
                         }
@@ -246,7 +246,7 @@ links:
                 show::show(shell);
             }
             "search" => {
-                search::search(shell);
+                search::search();
                 let end = Instant::now();
                 println!(
                     "Found {} {} in {:.2}s",
@@ -282,13 +282,13 @@ links:
                     match shell.as_str() {
                         "/bin/bash" => {
                             println!(
-                                "Use {} to start using added shortkuks.",
+                                "Use {} to start using added shortkuts.",
                                 "source ~/.bashrc".bright_cyan().bold()
                             );
                         }
                         "/bin/zsh" => {
                             println!(
-                                "Use {} to start using added shortkuks.",
+                                "Use {} to start using added shortkuts.",
                                 "source ~/.zshrc".bright_cyan().bold()
                             );
                         }
@@ -313,13 +313,13 @@ links:
                     match shell.as_str() {
                         "/bin/bash" => {
                             println!(
-                                "Use {} to start using added shortkuks.",
+                                "Use {} to start using added shortkuts.",
                                 "source ~/.bashrc".bright_cyan().bold()
                             );
                         }
                         "/bin/zsh" => {
                             println!(
-                                "Use {} to start using added shortkuks.",
+                                "Use {} to start using added shortkuts.",
                                 "source ~/.zshrc".bright_cyan().bold()
                             );
                         }

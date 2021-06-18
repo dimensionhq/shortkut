@@ -2,7 +2,7 @@ use colored::Colorize;
 use minreq::get;
 use std::env;
 
-pub fn search(shell: String) {
+pub fn search() {
     let args: Vec<String> = env::args().collect();
     let approx_string = &args[2];
 

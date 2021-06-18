@@ -61,7 +61,7 @@ pub fn delete_shortcut(alias: &str, command: &str, shell: String) {
     }
 }
 
-pub fn generate_shortcut_multi(alias: &str, command: &Vec<Value>) {
+pub fn generate_shortcut_multi(alias: &str, command: &Vec<Value>, shell: String) {
     match env::consts::OS {
         "windows" => {
             let command_string: &String = &command
@@ -106,13 +106,66 @@ pub fn generate_shortcut_multi(alias: &str, command: &Vec<Value>) {
                 }
             }
         }
-        "macos" => {
-            // alias alias='command'
-        }
-        "linux" => {}
         &_ => {
-            println!("{}", "OS Not Supported!".bright_yellow());
-            process::exit(1);
+            let commands = command
+                .into_iter()
+                .map(|v| {
+                    v.to_string()
+                        .replace("%", "$")
+                        .replace("$*", "\"$@\"")
+                        .replace("\"", "")
+                })
+                .collect::<Vec<String>>();
+
+            let mut location = String::new();
+
+            match shell.as_str() {
+                "/bin/bash" => {
+                    location = format!("{}/.bashrc", home::home_dir().unwrap().display());
+                }
+                "/bin/zsh" => {
+                    location = format!("{}/.zshrc", home::home_dir().unwrap().display());
+                }
+                _ => {}
+            }
+
+            let path = Path::new(location.as_str());
+
+            if path.exists() {
+                match OpenOptions::new().read(true).append(true).open(location) {
+                    Ok(mut file) => {
+                        let mut data = String::new();
+                        file.read_to_string(&mut data).unwrap_or_else(|err| {
+                            println!("{}", err);
+                            std::process::exit(1)
+                        });
+
+                        let command = commands.join("\n    ");
+                        let write_string = format!(
+                            r#"
+
+function {}() {{
+    {} "$@"
+}}"#,
+                            alias, command
+                        );
+
+                        // Write Alias To File (Append)
+                        if !data.contains(&write_string) {
+                            file.write_all(write_string.as_bytes()).unwrap();
+                        }
+                    }
+                    Err(err) => {
+                        println!(
+                            "{}",
+                            format!("shc must be run with {} permissions", "sudo".underline())
+                                .bright_red()
+                                .bold()
+                        );
+                        println!("{}", err);
+                    }
+                };
+            }
         }
     }
 }
@@ -158,7 +211,17 @@ pub fn generate_shortcut(alias: &str, command: &str, shell: String) {
             }
         }
         &_ => {
-            let location: String = format!("{}/.bashrc", home::home_dir().unwrap().display());
+            let mut location = String::new();
+
+            match shell.as_str() {
+                "/bin/bash" => {
+                    location = format!("{}/.bashrc", home::home_dir().unwrap().display());
+                }
+                "/bin/zsh" => {
+                    location = format!("{}/.zshrc", home::home_dir().unwrap().display());
+                }
+                _ => {}
+            }
 
             let path = Path::new(location.as_str());
 

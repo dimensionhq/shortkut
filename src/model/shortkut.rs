@@ -6,7 +6,7 @@ pub struct ShortKut {
     pub shortcuts: Vec<ShortKutType>,
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct ShortKutType {
     pub alias: String,
     pub description: Option<String>,

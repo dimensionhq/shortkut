@@ -26,7 +26,7 @@ pub fn add(shell: String) {
                 generate_shortcut(alias, command, shell.clone());
             } else {
                 let commands = &object.command.as_array().unwrap();
-                generate_shortcut_multi(alias, commands);
+                generate_shortcut_multi(alias, commands, shell.clone());
             }
 
             installed.push(alias.to_string());
