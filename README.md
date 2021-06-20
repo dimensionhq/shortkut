@@ -2,16 +2,16 @@
 
 A cross-platform, performant terminal shortcut manager.
 
-⚠️ MacOS And Linux Support Work In Progress
+
 
 ## 🔨 Build Status
 
 | Feature                  | Windows | MacOS | Linux |
 | ------------------------ | ------- | ----- | ----- |
-| Install Shortcut Bundle  | ✅      | 🚧    | ❌    |
-| Register Custom Shortcut | ✅      | 🚧    | ❌    |
-| Remove Shortcut Bundle   | ✅      | 🚧    | ❌    |
-| Remove Custom Shortcut   | ✅      | 🚧    | ❌    |
+| Install Shortcut Bundle  | ✅      | ✅    | ✅    |
+| Register Custom Shortcut | ✅      | ✅    | ✅    |
+| Remove Shortcut Bundle   | ✅      | ✅    | ✅    |
+| Remove Custom Shortcut   | ✅      | ✅    | ✅    |
 
 ## Installation
 
