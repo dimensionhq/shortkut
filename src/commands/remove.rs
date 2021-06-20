@@ -26,7 +26,7 @@ pub fn remove(shell: String) {
                 delete_shortcut(alias, command, shell.clone());
             } else {
                 let commands = &object.command.as_array().unwrap();
-                delete_shortcut_multi(alias, commands);
+                delete_shortcut_multi(alias, commands, shell.clone());
             }
             removed.push(alias.to_string());
         }
