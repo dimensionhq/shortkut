@@ -203,6 +203,7 @@ links:
         3 => match args[1].as_str() {
             "add" => {
                 add::add(shell.clone());
+
                 if vec!["linux", "macos"].contains(&std::env::consts::OS.to_string().as_str()) {
                     match shell.as_str() {
                         "/bin/bash" => {
@@ -211,7 +212,7 @@ links:
                                 "source ~/.bashrc".bright_cyan().bold()
                             );
                         }
-                        "usr/bin/zsh" => {
+                        "/usr/bin/zsh" => {
                             println!(
                                 "Use {} to start using added shortkuts.",
                                 "source ~/.zshrc".bright_cyan().bold()

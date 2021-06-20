@@ -7,8 +7,9 @@ mod utils;
 // TODO: Allow Command File To Be A List Of Commands
 
 fn main() {
+    #[allow(unused_variables)]
     let shell = String::new();
-    #[cfg(target_os = "linux")]
+    #[cfg(any(target_os = "linux", target_os = "macos"))]
     let shell = std::env::var("SHELL").unwrap();
     #[cfg(windows)]
     ansi_term::enable_ansi_support().unwrap();
