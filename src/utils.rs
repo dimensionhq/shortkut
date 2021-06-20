@@ -211,7 +211,7 @@ links:
                                 "source ~/.bashrc".bright_cyan().bold()
                             );
                         }
-                        "/bin/zsh" => {
+                        "usr/bin/zsh" => {
                             println!(
                                 "Use {} to start using added shortkuts.",
                                 "source ~/.zshrc".bright_cyan().bold()
@@ -232,7 +232,7 @@ links:
                                 "source ~/.bashrc".bright_cyan().bold()
                             );
                         }
-                        "/bin/zsh" => {
+                        "/usr/bin/zsh" => {
                             println!(
                                 "Use {} to start using added shortkuts.",
                                 "source ~/.zshrc".bright_cyan().bold()
@@ -286,7 +286,7 @@ links:
                                 "source ~/.bashrc".bright_cyan().bold()
                             );
                         }
-                        "/bin/zsh" => {
+                        "/usr/bin/zsh" => {
                             println!(
                                 "Use {} to start using added shortkuts.",
                                 "source ~/.zshrc".bright_cyan().bold()
@@ -317,7 +317,7 @@ links:
                                 "source ~/.bashrc".bright_cyan().bold()
                             );
                         }
-                        "/bin/zsh" => {
+                        "/usr/bin/zsh" => {
                             println!(
                                 "Use {} to start using added shortkuts.",
                                 "source ~/.zshrc".bright_cyan().bold()

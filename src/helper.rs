@@ -30,17 +30,7 @@ pub fn delete_shortcut_multi(alias: &str, command: &Vec<Value>, shell: String) {
         }
         "macos" => {}
         "linux" => {
-            let mut location = String::new();
-
-            match shell.as_str() {
-                "/bin/bash" => {
-                    location = format!("{}/.bashrc", home::home_dir().unwrap().display());
-                }
-                "/bin/zsh" => {
-                    location = format!("{}/.zshrc", home::home_dir().unwrap().display());
-                }
-                _ => {}
-            }
+            let location = get_shell_rc_location(shell);
 
             let data = read_to_string(&location).unwrap();
 
@@ -119,17 +109,7 @@ pub fn delete_shortcut(alias: &str, command: &str, shell: String) {
         }
         "macos" => {}
         "linux" => {
-            let mut location = String::new();
-
-            match shell.as_str() {
-                "/bin/bash" => {
-                    location = format!("{}/.bashrc", home::home_dir().unwrap().display());
-                }
-                "/bin/zsh" => {
-                    location = format!("{}/.zshrc", home::home_dir().unwrap().display());
-                }
-                _ => {}
-            }
+            let location = get_shell_rc_location(shell);
 
             let data = read_to_string(&location).unwrap();
 
@@ -246,17 +226,7 @@ pub fn generate_shortcut_multi(alias: &str, command: &Vec<Value>, shell: String)
                 })
                 .collect::<Vec<String>>();
 
-            let mut location = String::new();
-
-            match shell.as_str() {
-                "/bin/bash" => {
-                    location = format!("{}/.bashrc", home::home_dir().unwrap().display());
-                }
-                "/bin/zsh" => {
-                    location = format!("{}/.zshrc", home::home_dir().unwrap().display());
-                }
-                _ => {}
-            }
+            let location = get_shell_rc_location(shell);
 
             let path = Path::new(location.as_str());
 
@@ -374,17 +344,7 @@ pub fn generate_shortcut(alias: &str, command: &str, shell: String) {
             }
         }
         &_ => {
-            let mut location = String::new();
-
-            match shell.as_str() {
-                "/bin/bash" => {
-                    location = format!("{}/.bashrc", home::home_dir().unwrap().display());
-                }
-                "/bin/zsh" => {
-                    location = format!("{}/.zshrc", home::home_dir().unwrap().display());
-                }
-                _ => {}
-            }
+            let location = get_shell_rc_location(shell);
 
             let path = Path::new(location.as_str());
 
@@ -466,5 +426,20 @@ pub fn initialize() {
 
     if !path.exists() {
         create_dir(directory).unwrap();
+    }
+}
+
+#[cfg(any(target_os = "linux", target_os = "macos"))]
+pub fn get_shell_rc_location(shell: String) -> String {
+    if shell.contains("bash") {
+        return format!("{}/.bashrc", home::home_dir().unwrap().display());
+    } else if shell.contains("zsh") {
+        return format!("{}/.zshrc", home::home_dir().unwrap().display());
+    } else {
+        println!(
+            "{} shell is not supported yet.",
+            shell.bright_red().bold().underline()
+        );
+        std::process::exit(1);
     }
 }

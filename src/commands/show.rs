@@ -7,6 +7,7 @@ use std::io::Read;
 use std::process;
 use std::time::Instant;
 
+use crate::helper::get_shell_rc_location;
 use crate::model::shortkut::ShortKut;
 use crate::utils;
 
@@ -98,20 +99,9 @@ pub fn show(shell: String) {
             );
         }
         &_ => {
-            let mut data = String::new();
-            match shell.as_str() {
-                "/bin/bash" => {
-                    data =
-                        read_to_string(format!("{}/.bashrc", home::home_dir().unwrap().display()))
-                            .unwrap();
-                }
-                "/bin/zsh" => {
-                    data =
-                        read_to_string(format!("{}/.zshrc", home::home_dir().unwrap().display()))
-                            .unwrap();
-                }
-                _ => {}
-            }
+            let location = get_shell_rc_location(shell);
+            let data = read_to_string(location).unwrap();
+
             let pack = &args[2];
 
             for line in data.lines() {
