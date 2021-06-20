@@ -28,8 +28,7 @@ pub fn delete_shortcut_multi(alias: &str, command: &Vec<Value>, shell: String) {
                 });
             }
         }
-        "macos" => {}
-        "linux" => {
+        &_ => {
             let location = get_shell_rc_location(shell);
 
             let data = read_to_string(&location).unwrap();
@@ -83,10 +82,6 @@ pub fn delete_shortcut_multi(alias: &str, command: &Vec<Value>, shell: String) {
                     }
                 }
             }
-        }
-        &_ => {
-            println!("{}", "OS Not Supported!".bright_yellow());
-            process::exit(1);
         }
     }
 }
@@ -107,8 +102,7 @@ pub fn delete_shortcut(alias: &str, command: &str, shell: String) {
                 });
             }
         }
-        "macos" => {}
-        "linux" => {
+        &_ => {
             let location = get_shell_rc_location(shell);
 
             let data = read_to_string(&location).unwrap();
@@ -162,10 +156,6 @@ pub fn delete_shortcut(alias: &str, command: &str, shell: String) {
                     }
                 }
             }
-        }
-        &_ => {
-            println!("{}", "OS Not Supported!".bright_yellow());
-            process::exit(1);
         }
     }
 }

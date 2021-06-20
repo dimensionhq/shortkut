@@ -5,7 +5,6 @@ use std::fs::read_to_string;
 use std::fs::{read_dir, File};
 use std::io::Read;
 use std::process;
-use std::time::Instant;
 
 use crate::helper::get_shell_rc_location;
 use crate::model::shortkut::ShortKut;
@@ -15,7 +14,6 @@ pub fn show(shell: String) {
     println!("shc {} {}", "1.0.0", "show".bright_green().bold());
 
     let args: Vec<String> = std::env::args().collect();
-    let start = Instant::now();
 
     match std::env::consts::OS {
         "windows" => {
@@ -48,12 +46,23 @@ pub fn show(shell: String) {
                         .replace("%*", "")
                         .replace("\n", "");
 
-                    println!(
-                        "{} {} {}",
-                        &args[2].bright_cyan(),
-                        "=".bright_magenta(),
-                        command
-                    );
+                    let lines = command.lines().collect::<Vec<&str>>();
+
+                    if lines.len() == 1 {
+                        println!(
+                            "{} {} {}",
+                            &args[2].bright_cyan(),
+                            "=".bright_magenta(),
+                            command
+                        );
+                    } else {
+                        println!(
+                            "{} {{ \n  {} \n}}",
+                            &args[2].bright_cyan().bold(),
+                            command.yellow()
+                        );
+                    }
+
                     process::exit(0);
                 }
             }
@@ -81,44 +90,74 @@ pub fn show(shell: String) {
                     println!("{}", termimad::inline(description.as_str()));
                 }
             }
-
-            let end = Instant::now();
-
-            let shortcut: &str;
-            if shortcuts.len() == 1 {
-                shortcut = "shortcut"
-            } else {
-                shortcut = "shortcuts"
-            }
-
-            println!(
-                "Found {} {} in {:.2}s",
-                shortcuts.len().to_string().bright_green(),
-                shortcut,
-                (end - start).as_secs_f32()
-            );
         }
         &_ => {
             let location = get_shell_rc_location(shell);
             let data = read_to_string(location).unwrap();
 
             let pack = &args[2];
+            let mut start_index: i128 = -1;
 
-            for line in data.lines() {
-                if line.contains(pack) {
-                    if line.starts_with("alias") {
-                        let split = line.split_ascii_whitespace().collect::<Vec<&str>>();
-                        let command = &split[1].split("=").collect::<Vec<&str>>()[0];
-                        let alias = &split[1].split("=").collect::<Vec<&str>>()[1].replace("'", "");
+            for (idx, line) in data.lines().enumerate() {
+                if line.contains(pack) && line.starts_with("function") {
+                    start_index = idx as i128;
+                }
+            }
+            if start_index == -1 {
+                let res: ShortKut = utils::get_shortcut(&pack);
+                let shortcuts = &res.shortcuts;
+
+                for object in shortcuts.iter() {
+                    // let alias: &str = &object["alias"].as_str().unwrap();
+                    let is_array = object.command.is_array();
+                    let alias = &object.alias.as_str();
+
+                    if !is_array {
+                        let command = &object.command.as_str().unwrap();
 
                         println!(
                             "{} {} {}",
-                            command.bright_cyan().bold(),
+                            alias.bright_cyan(),
                             "=".bright_magenta().bold(),
-                            alias
+                            command
                         );
-                        std::process::exit(0);
+                    } else {
+                        let description = &object.clone().description.unwrap();
+
+                        println!("{}", termimad::inline(description.as_str()));
                     }
+                }
+            } else {
+                let lines = data.lines().collect::<Vec<&str>>();
+
+                let revised = &lines[start_index as usize + 1..];
+
+                let mut final_vec: Vec<String> = vec![];
+
+                for v in revised {
+                    if v.trim() != "}" {
+                        final_vec.push(v.trim().replace("\"$@\"", ""));
+                    } else {
+                        break;
+                    }
+                }
+
+                let command = final_vec.join("\n  ");
+
+                if final_vec.len() > 1 {
+                    // Multiline Command
+                    println!(
+                        "{} {{ \n  {} \n}}",
+                        pack.bright_cyan().bold(),
+                        command.yellow()
+                    );
+                } else {
+                    println!(
+                        "{} {} {}",
+                        pack.bright_cyan().bold(),
+                        "=".bright_magenta(),
+                        command
+                    );
                 }
             }
         }
