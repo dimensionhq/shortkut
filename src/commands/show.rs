@@ -6,10 +6,12 @@ use std::fs::{read_dir, File};
 use std::io::Read;
 use std::process;
 
+#[cfg(target_os = "linux")]
 use crate::helper::get_shell_rc_location;
 use crate::model::shortkut::ShortKut;
 use crate::utils;
 
+#[allow(unused_variables)]
 pub fn show(shell: String) {
     println!("shc {} {}", "1.0.0", "show".bright_green().bold());
 
@@ -44,10 +46,11 @@ pub fn show(shell: String) {
                     command = command
                         .replace("@echo off", "")
                         .replace("%*", "")
-                        .replace("\n", "");
+                        .replace("\n", "\n  ")
+                        .trim_end()
+                        .to_string();
 
                     let lines = command.lines().collect::<Vec<&str>>();
-
                     if lines.len() == 1 {
                         println!(
                             "{} {} {}",
@@ -57,7 +60,7 @@ pub fn show(shell: String) {
                         );
                     } else {
                         println!(
-                            "{} {{ \n  {} \n}}",
+                            "{} {{ {}\n}}",
                             &args[2].bright_cyan().bold(),
                             command.yellow()
                         );
@@ -92,6 +95,9 @@ pub fn show(shell: String) {
             }
         }
         &_ => {
+            let location = String::new();
+
+            #[cfg(target_os = "linux")]
             let location = get_shell_rc_location(shell);
             let data = read_to_string(location).unwrap();
 

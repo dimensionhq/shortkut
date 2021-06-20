@@ -7,6 +7,7 @@ use std::iter::Iterator;
 use std::path::Path;
 use std::process;
 
+#[allow(unused_variables)]
 pub fn delete_shortcut_multi(alias: &str, command: &Vec<Value>, shell: String) {
     match env::consts::OS {
         "windows" => {
@@ -29,6 +30,9 @@ pub fn delete_shortcut_multi(alias: &str, command: &Vec<Value>, shell: String) {
             }
         }
         &_ => {
+            let location = String::new();
+
+            #[cfg(target_os = "linux")]
             let location = get_shell_rc_location(shell);
 
             let data = read_to_string(&location).unwrap();
@@ -86,6 +90,7 @@ pub fn delete_shortcut_multi(alias: &str, command: &Vec<Value>, shell: String) {
     }
 }
 
+#[allow(unused_variables)]
 pub fn delete_shortcut(alias: &str, command: &str, shell: String) {
     match env::consts::OS {
         "windows" => {
@@ -103,6 +108,9 @@ pub fn delete_shortcut(alias: &str, command: &str, shell: String) {
             }
         }
         &_ => {
+            let location = String::new();
+
+            #[cfg(target_os = "linux")]
             let location = get_shell_rc_location(shell);
 
             let data = read_to_string(&location).unwrap();
@@ -160,6 +168,7 @@ pub fn delete_shortcut(alias: &str, command: &str, shell: String) {
     }
 }
 
+#[allow(unused_variables)]
 pub fn generate_shortcut_multi(alias: &str, command: &Vec<Value>, shell: String) {
     match env::consts::OS {
         "windows" => {
@@ -216,6 +225,8 @@ pub fn generate_shortcut_multi(alias: &str, command: &Vec<Value>, shell: String)
                 })
                 .collect::<Vec<String>>();
 
+            let location = String::new();
+            #[cfg(target_os = "linux")]
             let location = get_shell_rc_location(shell);
 
             let path = Path::new(location.as_str());
@@ -293,6 +304,7 @@ function {}() {{
     }
 }
 
+#[allow(unused_variables)]
 pub fn generate_shortcut(alias: &str, command: &str, shell: String) {
     match env::consts::OS {
         "windows" => {
@@ -334,6 +346,8 @@ pub fn generate_shortcut(alias: &str, command: &str, shell: String) {
             }
         }
         &_ => {
+            let location = String::new();
+            #[cfg(target_os = "linux")]
             let location = get_shell_rc_location(shell);
 
             let path = Path::new(location.as_str());
