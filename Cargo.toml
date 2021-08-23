@@ -1,8 +1,10 @@
 [package]
-name = "shc"
-version = "0.0.1"
+name = "shortkut"
+version = "0.1.0"
 authors = ["XtremeDevX <xtremedevx@gmail.com>"]
 edition = "2018"
+license = "MIT"
+description = "Get 10x more productive with shortkut. A fast, powerful terminal shortcut manager."
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -18,6 +20,6 @@ serde = { version = "1.0.126", features = ["derive"] }
 home = "0.5.3"
 
 [profile.release]
-opt-level = 'z'     # Optimize for size.
-lto = true          # Enable Link Time Optimization
-codegen-units = 1   # Reduce number of codegen units to increase optimizations.
+opt-level = 'z'   # Optimize for size.
+lto = true        # Enable Link Time Optimization
+codegen-units = 1 # Reduce number of codegen units to increase optimizations.

@@ -426,8 +426,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "shc"
-version = "0.0.1"
+name = "shortkut"
+version = "0.1.0"
 dependencies = [
  "ansi_term",
  "colored",
