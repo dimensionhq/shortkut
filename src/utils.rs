@@ -44,27 +44,30 @@ pub fn get_shortcut(name: &str) -> ShortKut {
 pub fn parse(shell: String) {
     let start = Instant::now();
     let args: Vec<String> = std::env::args().collect();
-
-    match args.len() {
-        1 => {
-            // Display Help Menu
-            let help = format!(
-                r#"{}
+    let help = format!(
+        r#"{}
 {} add - Add a shortcut
 {} remove - Remove a shortcut
 {} show - Show a shortcut pack
 {} search - Search for a shortcut pack"#,
-                format!("shc {}", "1.0.0".bright_green()),
-                "*".bright_magenta().bold(),
-                "*".bright_magenta().bold(),
-                "*".bright_magenta().bold(),
-                "*".bright_magenta().bold(),
-            );
+        format!("shc {}", "1.0.0".bright_green()),
+        "*".bright_magenta().bold(),
+        "*".bright_magenta().bold(),
+        "*".bright_magenta().bold(),
+        "*".bright_magenta().bold(),
+    );
+
+    match args.len() {
+        1 => {
+            // Display Help Menu
             println!("{}", help);
         }
         2 => {
             if args[1] == "--version" {
                 println!("shc version {}", "1.0.0".bright_green().bold())
+            } else if args[1] == "--help" {
+                // Display Help Menu
+                println!("{}", help);
             } else {
                 match args[1].as_str() {
                     "add" => {
