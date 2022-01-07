@@ -13,14 +13,18 @@ use crate::utils;
 
 #[allow(unused_variables)]
 pub fn show(shell: String) {
-    println!("shc {} {}", "1.0.0", "show".bright_green().bold());
+    println!("shortkut {} {}", "1.0.0", "show".bright_green().bold());
 
     let args: Vec<String> = std::env::args().collect();
 
     match std::env::consts::OS {
         "windows" => {
-            let paths =
-                read_dir(format!("{}{}", env::var("USERPROFILE").unwrap(), "\\.shc")).unwrap();
+            let paths = read_dir(format!(
+                "{}{}",
+                env::var("USERPROFILE").unwrap(),
+                "\\.shortkut"
+            ))
+            .unwrap();
 
             for path in paths {
                 let file_name = format!(
@@ -38,7 +42,7 @@ pub fn show(shell: String) {
                     let mut file = File::open(format!(
                         "{}{}{}",
                         env::var("USERPROFILE").unwrap(),
-                        "\\.shc\\",
+                        "\\.shortkut\\",
                         &file_name
                     ))
                     .unwrap();

@@ -5,7 +5,7 @@ use colored::Colorize;
 use std::time::Instant;
 
 pub fn add(shell: String) {
-    println!("shc {} {}", "1.0.0", "add".bright_green().bold());
+    println!("shortkut {} {}", "1.0.0", "add".bright_green().bold());
 
     let args: Vec<String> = std::env::args().collect();
     let start = Instant::now();

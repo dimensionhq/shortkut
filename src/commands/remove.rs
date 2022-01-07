@@ -5,7 +5,7 @@ use colored::Colorize;
 use std::time::Instant;
 
 pub fn remove(shell: String) {
-    println!("shc {} {}", "1.0.0", "remove".bright_green().bold());
+    println!("shortkut {} {}", "1.0.0", "remove".bright_green().bold());
 
     let start = Instant::now();
     let args: Vec<String> = std::env::args().collect();

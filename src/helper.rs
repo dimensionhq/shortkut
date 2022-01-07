@@ -16,7 +16,7 @@ pub fn delete_shortcut_multi(alias: &str, command: &Vec<Value>, shell: String) {
                 .map(|value| format!("{}\n", value.to_string().replace("\"", "")))
                 .collect::<String>();
 
-            let bin: String = format!("{}\\{}", env::var("USERPROFILE").unwrap(), ".shc\\");
+            let bin: String = format!("{}\\{}", env::var("USERPROFILE").unwrap(), ".shortkut\\");
             let file_path = format!("{}{}.bat", bin, alias);
             let contents = read_to_string(&file_path).unwrap_or_else(|_| {
                 return String::new();
@@ -78,9 +78,12 @@ pub fn delete_shortcut_multi(alias: &str, command: &Vec<Value>, shell: String) {
                     Err(err) => {
                         println!(
                             "{}",
-                            format!("shc must be run with {} permissions", "sudo".underline())
-                                .bright_red()
-                                .bold()
+                            format!(
+                                "shortkut must be run with {} permissions",
+                                "sudo".underline()
+                            )
+                            .bright_red()
+                            .bold()
                         );
                         println!("{}", err);
                     }
@@ -94,7 +97,7 @@ pub fn delete_shortcut_multi(alias: &str, command: &Vec<Value>, shell: String) {
 pub fn delete_shortcut(alias: &str, command: &str, shell: String) {
     match env::consts::OS {
         "windows" => {
-            let bin: String = format!("{}\\{}", env::var("USERPROFILE").unwrap(), ".shc\\");
+            let bin: String = format!("{}\\{}", env::var("USERPROFILE").unwrap(), ".shortkut\\");
             let file_path = format!("{}{}.bat", bin, alias);
             let contents = read_to_string(&file_path).unwrap_or_else(|_| {
                 return String::new();
@@ -156,9 +159,12 @@ pub fn delete_shortcut(alias: &str, command: &str, shell: String) {
                     Err(err) => {
                         println!(
                             "{}",
-                            format!("shc must be run with {} permissions", "sudo".underline())
-                                .bright_red()
-                                .bold()
+                            format!(
+                                "shortkut must be run with {} permissions",
+                                "sudo".underline()
+                            )
+                            .bright_red()
+                            .bold()
                         );
                         println!("{}", err);
                     }
@@ -177,7 +183,7 @@ pub fn generate_shortcut_multi(alias: &str, command: &Vec<Value>, shell: String)
                 .map(|value| format!("{}\n", value.to_string().replace("\"", "")))
                 .collect::<String>();
 
-            let bin: String = format!("{}\\{}", env::var("USERPROFILE").unwrap(), ".shc\\");
+            let bin: String = format!("{}\\{}", env::var("USERPROFILE").unwrap(), ".shortkut\\");
 
             let file = Path::new(&bin);
 
@@ -196,14 +202,15 @@ pub fn generate_shortcut_multi(alias: &str, command: &Vec<Value>, shell: String)
                     Err(err) => {
                         println!(
                             "Failed To Create {} : {}",
-                            ".shc".bright_red(),
+                            ".shortkut".bright_red(),
                             err.to_string().bright_yellow()
                         );
                         process::exit(1);
                     }
                 };
             } else {
-                let bin: String = format!("{}\\{}", env::var("USERPROFILE").unwrap(), ".shc\\");
+                let bin: String =
+                    format!("{}\\{}", env::var("USERPROFILE").unwrap(), ".shortkut\\");
                 let location: String = format!("{}{}.bat", &bin, &alias);
                 let path = Path::new(location.as_str());
                 if !path.exists() {
@@ -258,9 +265,12 @@ function {}() {{
                     Err(err) => {
                         println!(
                             "{}",
-                            format!("shc must be run with {} permissions", "sudo".underline())
-                                .bright_red()
-                                .bold()
+                            format!(
+                                "shortkut must be run with {} permissions",
+                                "sudo".underline()
+                            )
+                            .bright_red()
+                            .bold()
                         );
                         println!("{}", err);
                     }
@@ -292,9 +302,12 @@ function {}() {{
                     Err(err) => {
                         println!(
                             "{}",
-                            format!("shc must be run with {} permissions", "sudo".underline())
-                                .bright_red()
-                                .bold()
+                            format!(
+                                "shortkut must be run with {} permissions",
+                                "sudo".underline()
+                            )
+                            .bright_red()
+                            .bold()
                         );
                         println!("{}", err);
                     }
@@ -308,7 +321,7 @@ function {}() {{
 pub fn generate_shortcut(alias: &str, command: &str, shell: String) {
     match env::consts::OS {
         "windows" => {
-            let bin: String = format!("{}\\{}", env::var("USERPROFILE").unwrap(), ".shc\\");
+            let bin: String = format!("{}\\{}", env::var("USERPROFILE").unwrap(), ".shortkut\\");
 
             let file = Path::new(&bin);
 
@@ -327,14 +340,15 @@ pub fn generate_shortcut(alias: &str, command: &str, shell: String) {
                     Err(err) => {
                         println!(
                             "Failed To Create {} : {}",
-                            ".shc".bright_red(),
+                            ".shortkut".bright_red(),
                             err.to_string().bright_yellow()
                         );
                         process::exit(1);
                     }
                 };
             } else {
-                let bin: String = format!("{}\\{}", env::var("USERPROFILE").unwrap(), ".shc\\");
+                let bin: String =
+                    format!("{}\\{}", env::var("USERPROFILE").unwrap(), ".shortkut\\");
                 let location: String = format!("{}{}.bat", &bin, &alias);
                 let path = Path::new(location.as_str());
                 if !path.exists() {
@@ -378,9 +392,12 @@ function {}() {{
                     Err(err) => {
                         println!(
                             "{}",
-                            format!("shc must be run with {} permissions", "sudo".underline())
-                                .bright_red()
-                                .bold()
+                            format!(
+                                "shortkut must be run with {} permissions",
+                                "sudo".underline()
+                            )
+                            .bright_red()
+                            .bold()
                         );
                         println!("{}", err);
                     }
@@ -411,9 +428,12 @@ function {}() {{
                     Err(err) => {
                         println!(
                             "{}",
-                            format!("shc must be run with {} permissions", "sudo".underline())
-                                .bright_red()
-                                .bold()
+                            format!(
+                                "shortkut must be run with {} permissions",
+                                "sudo".underline()
+                            )
+                            .bright_red()
+                            .bold()
                         );
                         println!("{}", err);
                     }
@@ -424,7 +444,7 @@ function {}() {{
 }
 
 pub fn initialize() {
-    let directory = format!(r"{}/.shc", home::home_dir().unwrap().display());
+    let directory = format!(r"{}/.shortkut", home::home_dir().unwrap().display());
 
     let path = Path::new(directory.as_str());
 
