@@ -17,9 +17,13 @@ if [[ $(/usr/bin/id -u) -ne 0 ]]; then
 fi
 
 if [[ "$OSTYPE" =~ ^darwin ]]; then
-    echo "Downloading Shortkut for MacOS..."
-    curl -# -o /tmp/shortkut.macos "https://cdn.xtremedevx.com/dl/shortkut/shortkut.macos"
+echo "Downloading ${cyan}Shortkut${reset} for MacOS 🍎"
+    curl -# -o /tmp/shortkut.linux "http://xtreme-cdn.herokuapp.com/dl/shortkut/shortkut.macos"
     sudo mv /tmp/shortkut.macos /usr/local/bin/shortkut
+    echo "Installing ${cyan}Shortkut${reset}"
+    sudo chmod +x /usr/local/bin/shortkut
+    echo "${green}Successfully Installed Shortkut${reset}"
+    echo "To use Shortkut, type \`${cyan}shortkut ${magenta}--help${reset}\` in your terminal"
 fi
 
 if [[ "$OSTYPE" =~ ^linux ]]; then
