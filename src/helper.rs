@@ -131,7 +131,9 @@ pub fn delete_shortcut(alias: &str, command: &str, shell: String) {
                         let mut remove_lines_count = 0;
 
                         for (idx, line) in lines.by_ref().enumerate() {
-                            if line.contains(alias) {
+                            if !line.starts_with("#")
+                                && line.contains(format!("function {}()", alias).as_str())
+                            {
                                 start_index = idx as i128;
                             } else if start_index != -1 {
                                 if !line.contains("}") {
@@ -147,6 +149,7 @@ pub fn delete_shortcut(alias: &str, command: &str, shell: String) {
 
                         if start_index != -1 {
                             file.set_len(0).unwrap();
+
                             let remove_lines = &lines_vec[start_index as usize
                                 ..(start_index + remove_lines_count + 1) as usize];
 

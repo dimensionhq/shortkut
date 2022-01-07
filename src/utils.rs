@@ -232,13 +232,13 @@ links:
                     match shell.as_str() {
                         "/bin/bash" => {
                             println!(
-                                "Use {} to start using added shortkuts.",
+                                "Use {} to update your shortkuts.",
                                 "source ~/.bashrc".bright_cyan().bold()
                             );
                         }
                         "/usr/bin/zsh" => {
                             println!(
-                                "Use {} to start using added shortkuts.",
+                                "Use {} to update your shortkuts.",
                                 "source ~/.zshrc".bright_cyan().bold()
                             );
                         }
@@ -317,13 +317,13 @@ links:
                     match shell.as_str() {
                         "/bin/bash" => {
                             println!(
-                                "Use {} to start using added shortkuts.",
+                                "Use {} to update your shortkuts.",
                                 "source ~/.bashrc".bright_cyan().bold()
                             );
                         }
                         "/usr/bin/zsh" => {
                             println!(
-                                "Use {} to start using added shortkuts.",
+                                "Use {} to update your shortkuts.",
                                 "source ~/.zshrc".bright_cyan().bold()
                             );
                         }
