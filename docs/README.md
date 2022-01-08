@@ -31,7 +31,7 @@ Install the `shortkut` binary:
 
 On Windows:
 
-```ps1
+```
 Set-ExecutionPolicy -Scope CurrentUser RemoteSigned -force
 iwr -useb get.shortkut.sh | iex
 ```
