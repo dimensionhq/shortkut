@@ -11,9 +11,30 @@ A cross-platform, performant terminal shortcut manager.
 | Remove Shortcut Bundle   | ✅      | ✅    | ✅    |
 | Remove Custom Shortcut   | ✅      | ✅    | ✅    |
 
-## Installation
+## 📦 Installation
 
-Download the latest release for your operating system from the [Releases](https://github.com/XtremeDevX/shortkut/releases) page and run the Installer.
+### Rapid Install
+
+Install `shortkut`:
+
+On Windows:
+
+```ps1
+Set-ExecutionPolicy -Scope CurrentUser RemoteSigned -force
+iwr -useb get.shortkut.sh | iex
+```
+
+On MacOSX or Linux:
+
+```bash
+bash -c "$(sudo curl -fsSL https://shortkut.sh/install.sh)"
+```
+
+To update the `shortkut` itself, rerun the above script. It will replace the current version without touching Shortkut's configuration.
+
+### Other Options
+
+Download the latest release for your operating system from the [Releases](https://github.com/XtremeDevX/shortkut/releases) page and run the installer or extract the required files.
 
 Type `shortkut` for a help menu.
 
