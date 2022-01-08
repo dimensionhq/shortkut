@@ -9,9 +9,9 @@ module.exports = {
 
   theme: "default-prefers-color-scheme",
   themeConfig: {
-    // logo: "/icon.png",
+    logo: "/logo.png",
     // the GitHub repo path
-    repo: "XtremeDev/shortkut",
+    repo: "XtremeDevX/shortkut",
     // the label linking to the repo
     repoLabel: "GitHub",
     // // if your docs are not at the root of the repo:

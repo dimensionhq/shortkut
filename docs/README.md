@@ -15,15 +15,12 @@ features:
 footer: Apache-2.0 Licensed | Copyright © 2021-present XtremeDevX
 
 # Used for the description meta tag, for SEO
-metaTitle: "Shortkut: 10x your commandline productivity"
+metaTitle: "Shortkut | 10x Your Command-line Productivity"
 description: The easiest way to 10x your command line productivity. Quick installation available for Windows, MacOSX and Linux.
 ---
 
 <div class="center">
-  <video class="demo-video" muted autoplay loop playsinline>
-    <source src="/demo.webm" type="video/webm">
-    <source src="/demo.mp4" type="video/mp4">
-  </video>
+  <img class="demo-video" src="/demo.gif">
 </div>
 
 ### Install
