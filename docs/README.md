@@ -1,22 +1,22 @@
 ---
 home: true
-heroImage: /logo.svg
+heroImage: /logo.png
 heroText: null
-tagline: The minimal, blazing-fast, and infinitely customizable prompt for any shell!
-actionText: Get Started →
-actionLink: ./guide/
+tagline: The easiest way to 10x your command line productivity.
+actionText: Install Shortkut →
+actionLink: ./install/
 features:
   - title: Compatibility First
     details: Works on the most common shells on the most common operating systems. Use it everywhere!
   - title: Rust-Powered
-    details: Brings the best-in-class speed and safety of Rust, to make your prompt as quick and reliable as possible.
-  - title: Customizable
-    details: Every little detail is customizable to your liking, to make this prompt as minimal or feature-rich as you'd like it to be.
-footer: ISC Licensed | Copyright © 2019-present Starship Contributors
+    details: Brings the best-in-class speed and safety of Rust, to make your shortkut packs as quick and reliable as possible.
+  - title: Open Source
+    details: Shortkut is available on GitHub and contributing a pack is as simple as making a PR!
+footer: Apache-2.0 Licensed | Copyright © 2021-present XtremeDevX
 
 # Used for the description meta tag, for SEO
-metaTitle: "Starship: Cross-Shell Prompt"
-description: Starship is the minimal, blazing fast, and extremely customizable prompt for any shell! Shows the information you need, while staying sleek and minimal. Quick installation available for Bash, Fish, ZSH, Ion, Tcsh, Elvish, Nu, Xonsh, and PowerShell.
+metaTitle: "Shortkut: 10x your commandline productivity"
+description: The easiest way to 10x your command line productivity. Quick installation available for Windows, MacOSX and Linux.
 ---
 
 <div class="center">
@@ -26,135 +26,23 @@ description: Starship is the minimal, blazing fast, and extremely customizable p
   </video>
 </div>
 
-### Prerequisites
+### Install
 
-- A [Nerd Font](https://www.nerdfonts.com/) installed and enabled in your terminal.
+Install the `shortkut` binary:
 
-### Quick Install
+#### Install Latest Version
 
-1. Install the **starship** binary:
+On Windows:
 
-   #### Install Latest Version
+```ps1
+Set-ExecutionPolicy -Scope CurrentUser RemoteSigned -force
+iwr -useb get.shortkut.sh | iex
+```
 
-   With Shell:
+On MacOSX or Linux:
 
-   ```sh
-   sh -c "$(curl -fsSL https://starship.rs/install.sh)"
-   ```
-   To update the Starship itself, rerun the above script. It will replace the current version without touching Starship's configuration.
+```bash
+bash -c "$(sudo curl -fsSL https://shortkut.sh/install.sh)"
+```
 
-   #### Install via Package Manager
-
-   With [Homebrew](https://brew.sh/):
-
-   ```sh
-   brew install starship
-   ```
-
-   With [Scoop](https://scoop.sh):
-
-   ```powershell
-   scoop install starship
-   ```
-
-1. Add the init script to your shell's config file:
-
-   #### Bash
-
-   Add the following to the end of `~/.bashrc`:
-
-   ```sh
-   # ~/.bashrc
-
-   eval "$(starship init bash)"
-   ```
-
-   #### Fish
-
-   Add the following to the end of `~/.config/fish/config.fish`:
-
-   ```sh
-   # ~/.config/fish/config.fish
-
-   starship init fish | source
-   ```
-
-   #### Zsh
-
-   Add the following to the end of `~/.zshrc`:
-
-   ```sh
-   # ~/.zshrc
-
-   eval "$(starship init zsh)"
-   ```
-
-   #### Powershell
-
-   Add the following to the end of `Microsoft.PowerShell_profile.ps1`. You can check the location of this file by querying the `$PROFILE` variable in PowerShell. Typically the path is `~\Documents\PowerShell\Microsoft.PowerShell_profile.ps1` or `~/.config/powershell/Microsoft.PowerShell_profile.ps1` on -Nix.
-
-   ```sh
-   Invoke-Expression (&starship init powershell)
-   ```
-
-   #### Ion
-
-   Add the following to the end of `~/.config/ion/initrc`:
-
-   ```sh
-   # ~/.config/ion/initrc
-
-   eval $(starship init ion)
-   ```
-
-   #### Elvish
-
-   ::: warning
-   Only elvish v0.17 or higher is supported.
-   :::
-
-   Add the following to the end of `~/.elvish/rc.elv`:
-
-   ```sh
-   # ~/.elvish/rc.elv
-
-   eval (starship init elvish)
-   ```
-
-   #### Tcsh
-
-   Add the following to the end of `~/.tcshrc`:
-
-   ```sh
-   # ~/.tcshrc
-
-   eval `starship init tcsh`
-   ```
-
-   #### Nushell
-
-   ::: warning
-   This will change in the future.
-   Only nu version v0.33 or higher is supported.
-   :::
-   Add the following to your nu config file. You can check the location of this
-   file by running `config path` in nu.
-
-   ```toml
-   startup = [
-    "mkdir ~/.cache/starship",
-    "starship init nu | save ~/.cache/starship/init.nu",
-    "source ~/.cache/starship/init.nu"
-   ]
-   prompt = "starship_prompt"
-   ```
-
-   #### Xonsh
-
-   Add the following to the end of `~/.xonshrc`:
-
-   ```sh
-   # ~/.xonshrc
-
-   execx($(starship init xonsh))
-   ```
+To update the Shortkut itself, rerun the above script. It will replace the current version without touching Shortkut's configuration files.
