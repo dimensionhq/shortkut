@@ -1,3 +1,10 @@
+# all hail the legend, alex (github.com/alexschroder)
+# for passing on his wisdom and genius
+# and blessing this rust yaml file
+
+# Triggers the workflow on push or pull request events
+on: [push, pull_request]
+
 jobs:
   build:
     strategy:
@@ -24,4 +31,3 @@ jobs:
         releaseId: ${{ needs.create_release.outputs.id }}
         args: '*.bin'
 
-Message @ilyvion
