@@ -34,9 +34,17 @@ jobs:
         uses: Swatinem/rust-cache@v1.3.0
 
       - name: Build
-        run: cargo build --verbose
-      - name: Run tests
-        run: cargo test --verbose
+        run: cargo build --release
+        
+      - name: Rename Executable
+        run:   |
+         if [ "$RUNNER_OS" == "Linux" ]; then
+         elif [ "$RUNNER_OS" == "Windows" ]; then
+         else
+             mv target/release/shortkut target/release/shortkut.app
+         fi
+        shell: bash
+
 
       - name: Upload
         uses: actions/upload-artifact@v2
@@ -100,8 +108,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ env.RELEASE_PATH }}/${{ env.BINARY_NAME }}
-          asset_name: ${{ env.BINARY_NAME }}
+          asset_path: ${{ env.RELEASE_PATH }}/${{ env.BINARY_NAME }}.app
+          asset_name: ${{ env.BINARY_NAME }}.app
           asset_content_type: application/octet-stream
 
       - name: Upload Windows Release Asset
