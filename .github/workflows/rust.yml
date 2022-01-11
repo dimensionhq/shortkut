@@ -1,38 +1,113 @@
 # all hail the legend, alex (github.com/alexschroder)
 # for passing on his wisdom and genius
 # and blessing this rust yaml file
-
-# Triggers the workflow on push or pull request events
 on:
   push:
     tags:
       # This will only run the release workflow when it's tagged with a version
       # tag.
-      - 'v*'
+      - "v*"
+
+env:
+  BINARY_NAME: foobar
 
 jobs:
   build:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-11, windows-latest]
+        include:
+          - os: ubuntu-latest
+            exe_ext: ""
+          - os: macos-11
+            exe_ext: ".bin"
+          - os: windows-latest
+            exe_ext: ".exe"
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v2
-    - name: Rust Cache
-      # You may pin to the exact commit or the version.
-      # uses: Swatinem/rust-cache@842ef286fff290e445b90b4002cc9807c3669641
-      uses: Swatinem/rust-cache@v1.3.0
-    
-    - name: Build
-      run: cargo build --verbose
-    - name: Run tests
-      run: cargo test --verbose
-    - name: github-action-publish-binaries
-      uses: skx/github-action-publish-binaries@release-2.0
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        releaseId: ${{ needs.create_release.outputs.id }}
-        args: '*.bin'
+      - uses: actions/checkout@v2
+      - name: Rust Cache
+        # You may pin to the exact commit or the version.
+        # uses: Swatinem/rust-cache@842ef286fff290e445b90b4002cc9807c3669641
+        uses: Swatinem/rust-cache@v1.3.0
 
+      - name: Build
+        run: cargo build --verbose
+      - name: Run tests
+        run: cargo test --verbose
+
+      - name: Upload
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.os }}
+          path: target/debug/${{ env.BINARY_NAME }}.${{ matrix.exe_ext }}
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set Environment Variables
+        run: |
+          echo "RELEASE_PATH=$HOME/Release" >> $GITHUB_ENV
+          echo "VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
+          echo "NO_PREFIX_VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+
+      - name: Create Release Folder
+        run: mkdir -p ${{ env.RELEASE_PATH }}
+
+      - name: Download Ubuntu Artifacts from Build Step
+        uses: actions/download-artifact@v2
+        with:
+          name: ubuntu-latest
+          path: ${{ env.RELEASE_PATH }}
+      - name: Download MacOS Artifacts from Build Step
+        uses: actions/download-artifact@v2
+        with:
+          name: macos-11
+          path: ${{ env.RELEASE_PATH }}
+      - name: Download Windows Artifacts from Build Step
+        uses: actions/download-artifact@v2
+        with:
+          name: windows-latest
+          path: ${{ env.RELEASE_PATH }}
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.VERSION }}
+          release_name: Release ${{ env.VERSION }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Ubuntu Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ env.RELEASE_PATH }}/${{ env.BINARY_NAME }}
+          asset_name: ${{ env.BINARY_NAME }}
+          asset_content_type: application/octet-stream
+
+      - name: Upload MacOS Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ env.RELEASE_PATH }}/${{ env.BINARY_NAME }}.bin
+          asset_name: ${{ env.BINARY_NAME }}.bin
+          asset_content_type: application/octet-stream
+
+      - name: Upload Windows Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ env.RELEASE_PATH }}/${{ env.BINARY_NAME }}.exe
+          asset_name: ${{ env.BINARY_NAME }}.exe
+          asset_content_type: application/octet-stream
