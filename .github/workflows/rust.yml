@@ -35,16 +35,17 @@ jobs:
 
       - name: Build
         run: cargo build --release
-        
-      - name: Rename Executable
-        run:   |
-         if [ "$RUNNER_OS" == "Linux" ]; then
-         elif [ "$RUNNER_OS" == "Windows" ]; then
-         else
-             mv target/release/shortkut target/release/shortkut.app
-         fi
-        shell: bash
 
+      - name: Rename Executable
+        run: |
+          if [ "$RUNNER_OS" == "Linux" ]; then
+              echo "No need to rename."
+          elif [ "$RUNNER_OS" == "Windows" ]; then
+              echo "No need to rename."
+          else
+              mv target/release/shortkut target/release/shortkut.app
+          fi
+        shell: bash
 
       - name: Upload
         uses: actions/upload-artifact@v2
