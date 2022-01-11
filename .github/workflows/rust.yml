@@ -11,7 +11,7 @@ on: push
 #       - "v*"
 
 env:
-  BINARY_NAME: foobar
+  BINARY_NAME: shortkut
 
 jobs:
   build:
@@ -42,7 +42,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: ${{ matrix.os }}
-          path: target/debug/${{ env.BINARY_NAME }}.${{ matrix.exe_ext }}
+          path: target/debug/${{ env.BINARY_NAME }}${{ matrix.exe_ext }}
 
   publish:
     needs: build
