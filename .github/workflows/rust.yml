@@ -51,7 +51,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: ${{ matrix.os }}
-          path: target/debug/${{ env.BINARY_NAME }}${{ matrix.exe_ext }}
+          path: target/release/${{ env.BINARY_NAME }}${{ matrix.exe_ext }}
 
   publish:
     needs: build
