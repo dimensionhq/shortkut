@@ -27,6 +27,11 @@ jobs:
       run: cargo test --verbose
     - name: github-action-publish-binaries
       uses: skx/github-action-publish-binaries@release-2.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        releaseId: ${{ needs.create_release.outputs.id }}
+        args: '*.bin'
 
   macos:
     runs-on: macos-11
@@ -44,7 +49,11 @@ jobs:
       run: cargo test --verbose
     - name: github-action-publish-binaries
       uses: skx/github-action-publish-binaries@release-2.0
-
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        releaseId: ${{ needs.create_release.outputs.id }}
+        args: '*.bin'
     
   windows:
     runs-on: windows-latest
@@ -62,3 +71,8 @@ jobs:
       run: cargo test --verbose
     - name: github-action-publish-binaries
       uses: skx/github-action-publish-binaries@release-2.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        releaseId: ${{ needs.create_release.outputs.id }}
+        args: '*.bin'
