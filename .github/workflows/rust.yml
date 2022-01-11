@@ -1,12 +1,14 @@
 # all hail the legend, alex (github.com/alexschroder)
 # for passing on his wisdom and genius
 # and blessing this rust yaml file
-on:
-  push:
-    tags:
-      # This will only run the release workflow when it's tagged with a version
-      # tag.
-      - "v*"
+
+on: push
+#on:
+#   push:
+#     tags:
+#       # This will only run the release workflow when it's tagged with a version
+#       # tag.
+#       - "v*"
 
 env:
   BINARY_NAME: foobar
@@ -20,7 +22,7 @@ jobs:
           - os: ubuntu-latest
             exe_ext: ""
           - os: macos-11
-            exe_ext: ".bin"
+            exe_ext: ".app"
           - os: windows-latest
             exe_ext: ".exe"
     runs-on: ${{ matrix.os }}
