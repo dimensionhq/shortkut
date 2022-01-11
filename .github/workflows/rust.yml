@@ -2,13 +2,13 @@
 # for passing on his wisdom and genius
 # and blessing this rust yaml file
 
-on: push
-#on:
-#   push:
-#     tags:
-#       # This will only run the release workflow when it's tagged with a version
-#       # tag.
-#       - "v*"
+# on: push
+on:
+  push:
+    tags:
+      # This will only run the release workflow when it's tagged with a version
+      # tag.
+      - "v*"
 
 env:
   BINARY_NAME: shortkut
