@@ -22,7 +22,7 @@ jobs:
           - os: ubuntu-latest
             exe_ext: ""
           - os: macos-11
-            exe_ext: ".app"
+            exe_ext: ""
           - os: windows-latest
             exe_ext: ".exe"
     runs-on: ${{ matrix.os }}

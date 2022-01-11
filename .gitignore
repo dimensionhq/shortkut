@@ -2,3 +2,4 @@
 /bin
 shortkut-installer/target
 shortkut-installer/.vscode
+/docs/node_modules
