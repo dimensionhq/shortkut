@@ -25,6 +25,8 @@ jobs:
       run: cargo build --verbose
     - name: Run tests
       run: cargo test --verbose
+    - name: github-action-publish-binaries
+      uses: skx/github-action-publish-binaries@release-2.0
 
   macos:
     runs-on: macos-11
@@ -40,6 +42,9 @@ jobs:
       run: cargo build --verbose
     - name: Run tests
       run: cargo test --verbose
+    - name: github-action-publish-binaries
+      uses: skx/github-action-publish-binaries@release-2.0
+
     
   windows:
     runs-on: windows-latest
@@ -55,3 +60,5 @@ jobs:
       run: cargo build --verbose
     - name: Run tests
       run: cargo test --verbose
+    - name: github-action-publish-binaries
+      uses: skx/github-action-publish-binaries@release-2.0
