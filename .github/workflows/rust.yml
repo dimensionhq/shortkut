@@ -87,7 +87,7 @@ jobs:
 
       - name: List Assets
         run: |
-          ls /home/runner/Release
+          ls -l /home/runner/Release
 
       - name: Create Release
         id: create_release
