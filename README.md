@@ -13,7 +13,7 @@ A cross-platform, performant terminal shortcut manager.
 
 ## 📦 Installation
 
-### Rapid Install
+### ⚡ Rapid Install
 
 Install `shortkut`:
 
@@ -32,11 +32,13 @@ bash -c "$(sudo curl -fsSL https://shortkut.sh/install.sh)"
 
 To update the `shortkut` itself, rerun the above script. It will replace the current version without touching Shortkut's configuration.
 
-### Other Options
+### Other Installation Options
 
 Download the latest release for your operating system from the [Releases](https://github.com/XtremeDevX/shortkut/releases) page and run the installer or extract the required files.
 
 Type `shortkut` for a help menu.
+
+## Usage
 
 ```ps1
 shortkut 1.0.0
