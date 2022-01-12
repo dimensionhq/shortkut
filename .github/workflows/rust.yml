@@ -36,6 +36,7 @@ jobs:
       - name: Build
         run: cargo build --release
 
+      # shortkut -> shortkut.app (to distinguish)
       - name: Rename Executable
         run: |
           if [ "$RUNNER_OS" == "Linux" ]; then
