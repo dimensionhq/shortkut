@@ -90,16 +90,24 @@ jobs:
         run: |
           ls -l /home/runner/Release
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Release
+        uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ env.VERSION }}
-          release_name: Release ${{ env.VERSION }}
-          draft: false
-          prerelease: false
+          files: |
+            Release/shortkut.exe
+            Release/shortkut.app
+            Release/shortkut
+      
+      # - name: Create Release
+      #   id: create_release
+      #   uses: actions/create-release@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     tag_name: ${{ env.VERSION }}
+      #     release_name: Release ${{ env.VERSION }}
+      #     draft: false
+      #     prerelease: false
 
       - name: Upload Ubuntu Release Asset
         uses: actions/upload-release-asset@v1
