@@ -40,10 +40,11 @@ jobs:
       - name: Rename Executable
         run: |
           if [ "$RUNNER_OS" == "Linux" ]; then
-              echo "No need to rename."
+              strip target/release/shortkut
           elif [ "$RUNNER_OS" == "Windows" ]; then
               echo "No need to rename."
           else
+              strip target/release/shortkut
               mv target/release/shortkut target/release/shortkut.app
           fi
         shell: bash
