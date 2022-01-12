@@ -22,7 +22,7 @@ jobs:
           - os: ubuntu-latest
             exe_ext: ""
           - os: macos-11
-            exe_ext: ".app"
+            exe_ext: ".bin"
           - os: windows-latest
             exe_ext: ".exe"
     runs-on: ${{ matrix.os }}
@@ -36,7 +36,7 @@ jobs:
       - name: Build
         run: cargo build --release
 
-      # shortkut -> shortkut.app (to distinguish)
+      # shortkut -> shortkut.bin (to distinguish)
       - name: Rename Executable
         run: |
           if [ "$RUNNER_OS" == "Linux" ]; then
@@ -45,7 +45,7 @@ jobs:
               echo "No need to rename."
           else
               strip target/release/shortkut
-              mv target/release/shortkut target/release/shortkut.app
+              mv target/release/shortkut target/release/shortkut.bin
           fi
         shell: bash
 
@@ -95,7 +95,7 @@ jobs:
         with:
           files: |
             ${{ env.RELEASE_PATH }}/${{ env.BINARY_NAME }}.exe
-            ${{ env.RELEASE_PATH }}/${{ env.BINARY_NAME }}.app
+            ${{ env.RELEASE_PATH }}/${{ env.BINARY_NAME }}.bin
             ${{ env.RELEASE_PATH }}/${{ env.BINARY_NAME }}
       
       # - name: Create Release
@@ -135,8 +135,8 @@ jobs:
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       #   with:
       #     upload_url: ${{ steps.create_release.outputs.upload_url }}
-      #     asset_path: ${{ env.RELEASE_PATH }}/${{ env.BINARY_NAME }}.app
-      #     asset_name: ${{ env.BINARY_NAME }}.app
+      #     asset_path: ${{ env.RELEASE_PATH }}/${{ env.BINARY_NAME }}.bin
+      #     asset_name: ${{ env.BINARY_NAME }}.bin
       #     asset_content_type: application/octet-stream
 
       
