@@ -6,7 +6,7 @@ use std::fs::{read_dir, File};
 use std::io::Read;
 use std::process;
 
-#[cfg(target_os = "linux")]
+#[cfg(unix)]
 use crate::helper::get_shell_rc_location;
 use crate::model::shortkut::ShortKut;
 use crate::utils;
@@ -101,7 +101,7 @@ pub fn show(shell: String) {
         &_ => {
             let location = String::new();
 
-            #[cfg(target_os = "linux")]
+            #[cfg(unix)]
             let location = get_shell_rc_location(shell);
             let data = read_to_string(location).unwrap();
 

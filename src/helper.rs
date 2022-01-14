@@ -32,12 +32,13 @@ pub fn delete_shortcut_multi(alias: &str, command: &Vec<Value>, shell: String) {
         &_ => {
             let location = String::new();
 
-            #[cfg(target_os = "linux")]
+            #[cfg(unix)]
             let location = get_shell_rc_location(shell);
 
             let data = read_to_string(&location).unwrap();
 
             let path = Path::new(location.as_str());
+
             if path.exists() {
                 match OpenOptions::new().write(true).open(location) {
                     Ok(mut file) => {
@@ -85,7 +86,9 @@ pub fn delete_shortcut_multi(alias: &str, command: &Vec<Value>, shell: String) {
                             .bright_red()
                             .bold()
                         );
+
                         println!("{}", err);
+                        std::process::exit(1);
                     }
                 }
             }
@@ -113,7 +116,7 @@ pub fn delete_shortcut(alias: &str, command: &str, shell: String) {
         &_ => {
             let location = String::new();
 
-            #[cfg(target_os = "linux")]
+            #[cfg(unix)]
             let location = get_shell_rc_location(shell);
 
             let data = read_to_string(&location).unwrap();
@@ -169,7 +172,9 @@ pub fn delete_shortcut(alias: &str, command: &str, shell: String) {
                             .bright_red()
                             .bold()
                         );
+
                         println!("{}", err);
+                        std::process::exit(1);
                     }
                 }
             }
@@ -236,7 +241,8 @@ pub fn generate_shortcut_multi(alias: &str, command: &Vec<Value>, shell: String)
                 .collect::<Vec<String>>();
 
             let location = String::new();
-            #[cfg(target_os = "linux")]
+
+            #[cfg(unix)]
             let location = get_shell_rc_location(shell);
 
             let path = Path::new(location.as_str());
@@ -275,7 +281,9 @@ function {}() {{
                             .bright_red()
                             .bold()
                         );
+
                         println!("{}", err);
+                        std::process::exit(1);
                     }
                 };
             } else {
@@ -312,7 +320,9 @@ function {}() {{
                             .bright_red()
                             .bold()
                         );
+
                         println!("{}", err);
+                        std::process::exit(1);
                     }
                 }
             }
@@ -364,7 +374,8 @@ pub fn generate_shortcut(alias: &str, command: &str, shell: String) {
         }
         &_ => {
             let location = String::new();
-            #[cfg(target_os = "linux")]
+
+            #[cfg(unix)]
             let location = get_shell_rc_location(shell);
 
             let path = Path::new(location.as_str());
@@ -402,7 +413,9 @@ function {}() {{
                             .bright_red()
                             .bold()
                         );
+
                         println!("{}", err);
+                        std::process::exit(1);
                     }
                 };
             } else {
@@ -438,7 +451,9 @@ function {}() {{
                             .bright_red()
                             .bold()
                         );
+
                         println!("{}", err);
+                        std::process::exit(1);
                     }
                 }
             }
