@@ -22,7 +22,7 @@ jobs:
           - os: ubuntu-latest
             exe_ext: ""
           - os: macos-11
-            exe_ext: ".app"
+            exe_ext: ".bin"
           - os: windows-latest
             exe_ext: ".exe"
     runs-on: ${{ matrix.os }}
@@ -36,14 +36,16 @@ jobs:
       - name: Build
         run: cargo build --release
 
+      # shortkut -> shortkut.bin (to distinguish)
       - name: Rename Executable
         run: |
           if [ "$RUNNER_OS" == "Linux" ]; then
-              echo "No need to rename."
+              strip target/release/shortkut
           elif [ "$RUNNER_OS" == "Windows" ]; then
               echo "No need to rename."
           else
-              mv target/release/shortkut target/release/shortkut.app
+              strip target/release/shortkut
+              mv target/release/shortkut target/release/shortkut.bin
           fi
         shell: bash
 
@@ -84,43 +86,57 @@ jobs:
           name: windows-latest
           path: ${{ env.RELEASE_PATH }}
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ env.VERSION }}
-          release_name: Release ${{ env.VERSION }}
-          draft: false
-          prerelease: false
+      - name: List Assets
+        run: |
+          ls -l /home/runner/Release
 
-      - name: Upload Ubuntu Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Release
+        uses: softprops/action-gh-release@v1
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ env.RELEASE_PATH }}/${{ env.BINARY_NAME }}
-          asset_name: ${{ env.BINARY_NAME }}
-          asset_content_type: application/octet-stream
+          files: |
+            ${{ env.RELEASE_PATH }}/${{ env.BINARY_NAME }}.exe
+            ${{ env.RELEASE_PATH }}/${{ env.BINARY_NAME }}.bin
+            ${{ env.RELEASE_PATH }}/${{ env.BINARY_NAME }}
+      
+      # - name: Create Release
+      #   id: create_release
+      #   uses: actions/create-release@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     tag_name: ${{ env.VERSION }}
+      #     release_name: Release ${{ env.VERSION }}
+      #     draft: false
+      #     prerelease: false
 
-      - name: Upload MacOS Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ env.RELEASE_PATH }}/${{ env.BINARY_NAME }}.app
-          asset_name: ${{ env.BINARY_NAME }}.app
-          asset_content_type: application/octet-stream
+      # - name: Upload Ubuntu Release Asset
+      #   uses: actions/upload-release-asset@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+      #     asset_path: ${{ env.RELEASE_PATH }}/${{ env.BINARY_NAME }}
+      #     asset_name: ${{ env.BINARY_NAME }}
+      #     asset_content_type: application/octet-stream
 
-      - name: Upload Windows Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ env.RELEASE_PATH }}/${{ env.BINARY_NAME }}.exe
-          asset_name: ${{ env.BINARY_NAME }}.exe
-          asset_content_type: application/octet-stream
+      # - name: Upload Windows Release Asset
+      #   uses: actions/upload-release-asset@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+      #     asset_path: ${{ env.RELEASE_PATH }}/${{ env.BINARY_NAME }}.exe
+      #     asset_name: ${{ env.BINARY_NAME }}.exe
+      #     asset_content_type: application/octet-stream
+
+      # - name: Upload MacOS Release Asset
+      #   uses: actions/upload-release-asset@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+      #     asset_path: ${{ env.RELEASE_PATH }}/${{ env.BINARY_NAME }}.bin
+      #     asset_name: ${{ env.BINARY_NAME }}.bin
+      #     asset_content_type: application/octet-stream
+
+      
